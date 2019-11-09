@@ -119,19 +119,25 @@
   <ItemGroup>
     <ClCompile Include="..\glad.c" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Direction.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="GLHandler.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Direction.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="GLHandler.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="Orientation.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragmentShader.txt" />

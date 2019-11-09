@@ -5,6 +5,9 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include "Direction.h"
+#include "Position.h"
+#include "Triangle.h"
 
 using namespace std;
 
@@ -48,6 +51,15 @@ void generateObjects()
 
 int main()
 {
+	Position a(0, 1, 0), b(1, 0, 0), c(0, 0, 1);
+	Triangle t(&b, &a, &c);
+	t.calcNormal();
+	Direction dir = t.m_normal;
+	cout << dir.x() << ' ' << dir.y() << ' ' << dir.z();
+	int x;
+	cin >> x;
+	cout << x;
+	return 0;
 	generateObjects();
 
 	GLHandler glHandler;
