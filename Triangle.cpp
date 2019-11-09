@@ -18,6 +18,11 @@ Triangle::Triangle(Position * a, Position * b, Position * c)
 	m_c = c;
 }
 
+void Triangle::draw(GLHandler & gl)
+{
+	
+}
+
 void Triangle::calcNormal()
 {
 	Position V = *m_b - *m_a;

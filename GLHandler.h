@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <iostream>
+#include "Camera.h"
 
 using namespace std;
 
@@ -15,6 +16,8 @@ const unsigned int MAX_SHADER_SIZE = 5000;
 
 class GLHandler
 {
+	Camera camera;
+
 	struct Vertex
 	{
 		float x, y, z;

@@ -1,12 +1,12 @@
-#include "Orientation.h"
+#include "Rotation.h"
 
 
 
-Orientation::Orientation()
+Rotation::Rotation()
 {
 }
 
 
-Orientation::~Orientation()
+Rotation::~Rotation()
 {
 }

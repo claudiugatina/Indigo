@@ -126,6 +126,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="Rotation.cpp" />
     <ClCompile Include="Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,7 +135,7 @@
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="GLHandler.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="Orientation.h" />
+    <ClInclude Include="Rotation.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Triangle.h" />

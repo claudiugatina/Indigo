@@ -1,16 +1,22 @@
 #pragma once
 #include "Position.h"
-#include "Orientation.h"
+#include "Rotation.h"
+#include "Direction.h"
 
 class Camera
 {
 public:
-	Position position();
-	Orientation orientation();
+	Camera(Position position, Rotation rotation, Direction direction);
 	Camera();
 	~Camera();
+
+	Position& position();
+	Rotation& rotation();
+	Direction& direction();
+
 private:
 	Position m_position;
-	Orientation m_orientation;
+	Rotation m_rotation;
+	Direction m_direction;
 };
 
