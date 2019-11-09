@@ -1,0 +1,16 @@
+#version 330 core
+
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 colorIn;
+
+uniform float zp;
+uniform float norm;
+uniform mat3 rotMat;
+uniform mat4 projMat;
+out vec3 colorOut;
+
+void main()
+{
+	colorOut = colorIn;
+	gl_Position = vec4(aPos.x * zp / aPos.z, aPos.y * zp / aPos.z, 0.0, 1.0);
+}
