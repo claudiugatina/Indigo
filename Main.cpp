@@ -16,35 +16,48 @@ vector<vector<float> > objects;
 void generateObjects()
 {
 	vector<float> obj, obj2;
+	vector<float> obj3 = { 
+		-0.5, 0.0, 0.0, 1.0, 1.0, 1.0,
+		0.5, 0.0, 0.0, 1.0, 1.0, 1.0,
+		0.0, 0.5, -5.0, 1.0, 1.0, 1.0,
+	};
+
+	vector<float> obj4 = {
+		-0.5, 0.5, 0.0, 0.0, 0.0, 0.0,
+		0.5, 0.5, 0.0, 0.0, 0.0, 0.0,
+		0.0, 0.0, -5.0, 0.0, 0.0, 0.0,
+	};
 
 	obj.push_back(-0.8);
 	obj.push_back(0.0);
-	obj.push_back(1.0);
+	obj.push_back(0.0);
 
 	obj.push_back(0.8);
 	obj.push_back(0.0);
-	obj.push_back(1.0);
+	obj.push_back(0.0);
 
 	obj.push_back(0.0);
 	obj.push_back(-0.8);
-	obj.push_back(10.0);
+	obj.push_back(0.0);
 
 
 
 	obj2.push_back(-0.8);
 	obj2.push_back(-0.8);
-	obj2.push_back(1.0);
+	obj2.push_back(0.0);
 
 	obj2.push_back(0.8);
 	obj2.push_back(-0.8);
-	obj2.push_back(1.0);
+	obj2.push_back(0.0);
 
 	obj2.push_back(0.0);
 	obj2.push_back(0.0);
-	obj2.push_back(10.0);
+	obj2.push_back(0.0);
 
-	objects.push_back(obj);
-	objects.push_back(obj2);
+	//objects.push_back(obj);
+	//objects.push_back(obj2);
+	objects.push_back(obj4);
+	objects.push_back(obj3);
 
 
 }

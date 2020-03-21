@@ -2,17 +2,17 @@
 
 
 
-float Position::x()
+float& Position::x()
 {
 	return m_x;
 }
 
-float Position::y()
+float& Position::y()
 {
 	return m_y;
 }
 
-float Position::z()
+float& Position::z()
 {
 	return m_z;
 }

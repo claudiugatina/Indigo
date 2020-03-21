@@ -2,22 +2,24 @@
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 colorIn;
-layout (location = 2) in vec3 norm;
+//layout (location = 2) in vec3 norm;
 
-uniform vec3 cameraPos;
-uniform vec3 cameraDir;
-uniform vec3 cameraRot;
-
+//uniform vec3 cameraPos;
+//uniform vec3 cameraDir;
+//uniform vec3 cameraRot;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 out vec3 colorOut;
 
 void main()
 {
-	vec3 cameraToVertex = aPos - cameraPos;
-	float r = length(cameraToVertex);
-	lr = arcsin(cameraToVertex.x / r) - cameraDir.z; # left right angle
-	ud = arcsin(cameraToVertex.y / r) - cameraDir.y; # up-down angle
+//	vec3 cameraToVertex = aPos - cameraPos;
+//	float r = length(cameraToVertex);
+//	float lr = asin(cameraToVertex.x / r) - cameraDir.z; 
+//	float ud = asin(cameraToVertex.y / r) - cameraDir.y; 
 
-	float viewCos = abs(dot(cameraToVertex, norm) / (length(cameraToVertex) * length(norm)));
-	colorOut = colorIn * viewCos;
-	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+//	float viewCos = abs(dot(cameraToVertex, norm) / (length(cameraToVertex) * length(norm)));
+	colorOut = colorIn; // * viewCos;
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

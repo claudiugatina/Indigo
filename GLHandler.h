@@ -8,6 +8,9 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <iostream>
+#include "../glm/glm.hpp"
+#include "../glm/gtc/matrix_transform.hpp"
+#include "../glm/gtc/type_ptr.hpp"
 #include "Camera.h"
 
 using namespace std;
@@ -26,18 +29,31 @@ class GLHandler
 	struct Object
 	{
 		int size;
-		unsigned int VAO;
-		unsigned int VBO;
-		float* vertexPositionPointer;
-		float* vertexColorPointer;
+		Rotation rotation;
+		Position position;
+		float scale;
+		glm::mat4 transform;
+		GLuint VAO;
+		GLuint VBO;
+		float* vertexAttribPointer;
+
+		Object() : position(0, 0, 0) {}
+
+		void calcTransform()
+		{
+			transform = glm::mat4(1.0f);
+			transform = glm::translate(transform, glm::vec3(position.x(), position.y(), position.z()));
+		//	transform = glm::rotate(transform, glm::vec3(rotation.roll(), rotation.pitch(), rotation.skew()));
+		}
 
 		void draw()
 		{
+			calcTransform();
 			glBindVertexArray(VAO);
 
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexPositionPointer, GL_STATIC_DRAW);
-			glDrawArrays(GL_TRIANGLES, 0, size / 3);
+			glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexAttribPointer, GL_STATIC_DRAW);
+			glDrawArrays(GL_TRIANGLES, 0, size);
 		}
 	};
 

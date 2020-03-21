@@ -30,67 +30,49 @@ void GLHandler::processInput(GLFWwindow *window)
 
 void GLHandler::translateLeft()
 {
-	for (int i = 0; i < objects.size(); ++i)
+	for (auto& object : objects)
 	{
-		for (int j = 0; j < objects[i].size; j += 3)
-		{
-			objects[i].vertexPositionPointer[j] -= 0.01;
-		}
+		object.position.x() -= 0.01;
 	}
 }
 
 void GLHandler::translateRight()
 {
-	for (int i = 0; i < objects.size(); ++i)
+	for (auto& object : objects)
 	{
-		for (int j = 0; j < objects[i].size; j += 3)
-		{
-			objects[i].vertexPositionPointer[j] += 0.01;
-		}
+		object.position.x() += 0.01;
 	}
 }
 
 void GLHandler::translateUp()
 {
-	for (int i = 0; i < objects.size(); ++i)
+	for (auto& object : objects)
 	{
-		for (int j = 1; j < objects[i].size; j += 3)
-		{
-			objects[i].vertexPositionPointer[j] += 0.01;
-		}
+		object.position.y() += 0.01;
 	}
 }
 
 void GLHandler::translateDown()
 {
-	for (int i = 0; i < objects.size(); ++i)
+	for (auto& object : objects)
 	{
-		for (int j = 1; j < objects[i].size; j += 3)
-		{
-			objects[i].vertexPositionPointer[j] -= 0.01;
-		}
+		object.position.y() -= 0.01;
 	}
 }
 
 void GLHandler::translateDeep()
 {
-	for (int i = 0; i < objects.size(); ++i)
+	for (auto& object : objects)
 	{
-		for (int j = 2; j < objects[i].size; j += 3)
-		{
-			objects[i].vertexPositionPointer[j] += 0.01;
-		}
+		object.position.z() += 0.01;
 	}
 }
 
 void GLHandler::translateClose()
 {
-	for (int i = 0; i < objects.size(); ++i)
+	for (auto& object : objects)
 	{
-		for (int j = 2; j < objects[i].size; j += 3)
-		{
-			objects[i].vertexPositionPointer[j] -= 0.01;
-		}
+		object.position.z() -= 0.01;
 	}
 }
 
@@ -174,8 +156,8 @@ void GLHandler::initShaders()
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	// glDeleteShader(vertexShader);
+	// glDeleteShader(fragmentShader);
 
 }
 
@@ -195,6 +177,15 @@ void GLHandler::readStringFromFile(char* filename, char* str)
 
 void GLHandler::render()
 {
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glUseProgram(shaderProgram);
+
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glEnable(GL_DEPTH_TEST);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
@@ -203,8 +194,7 @@ void GLHandler::render()
 
 		// render
 		// ------
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/*	GLint loc = glGetUniformLocation(shaderProgram, "rotMat");
 		if (loc != -1)
@@ -218,16 +208,16 @@ void GLHandler::render()
 			glUniformMatrix4fv(loc, 1, GL_FALSE, projMat);
 		}
 		*/
-		GLint loc = glGetUniformLocation(shaderProgram, "zp");
-		if (loc != -1)
-		{
-			glUniform1f(loc, 1.0);
-		}
+		glm::mat4 view = glm::mat4(1.0f);
+		// note that we're translating the scene in the reverse direction of where we want to move
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-		glUseProgram(shaderProgram);
-
-		for (auto obj : objects)
+		for (auto& obj : objects)
 		{
+			unsigned int transformLoc = glGetUniformLocation(shaderProgram, "model");
+			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(obj.transform));
 			obj.draw();
 		}
 
@@ -248,21 +238,21 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	{
 		Object obj;
 		obj.size = initialObjects[i].size();
-		obj.vertexPositionPointer = new float[obj.size];
+		obj.vertexAttribPointer = new float[obj.size];
 		for (int j = 0; j < initialObjects[i].size(); ++j)
-			obj.vertexPositionPointer[j] = initialObjects[i][j];
+			obj.vertexAttribPointer[j] = initialObjects[i][j];
 		glGenVertexArrays(1, &obj.VAO);
 		glGenBuffers(1, &obj.VBO);
 
 		glBindVertexArray(obj.VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, obj.VBO);
-		glBufferData(GL_ARRAY_BUFFER, obj.size * sizeof(float), obj.vertexPositionPointer, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, obj.size * sizeof(float), obj.vertexAttribPointer, GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
