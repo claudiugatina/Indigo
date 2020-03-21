@@ -2,24 +2,24 @@
 
 
 
-Position & Camera::position()
+glm::vec3 & Camera::position()
 {
 	return m_position;
 }
 
-Rotation & Camera::rotation()
+glm::vec3 & Camera::rotation()
 {
 	return m_rotation;
 }
 
-Direction & Camera::direction()
+glm::vec3 & Camera::direction()
 {
 	return m_direction;
 }
-
-Camera::Camera(Position position, Rotation rotation, Direction direction) : m_position(position), m_direction(direction), m_rotation(rotation)
-{
-}
+//
+//Camera::Camera(Position position, Rotation rotation, Direction direction) : m_position(position), m_direction(direction), m_rotation(rotation)
+//{
+//}
 
 Camera::Camera()
 {

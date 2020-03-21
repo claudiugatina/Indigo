@@ -19,7 +19,7 @@ const unsigned int MAX_SHADER_SIZE = 5000;
 
 class GLHandler
 {
-	Camera camera;
+	Camera m_camera;
 
 	struct Vertex
 	{

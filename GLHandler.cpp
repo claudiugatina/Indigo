@@ -30,50 +30,32 @@ void GLHandler::processInput(GLFWwindow *window)
 
 void GLHandler::translateLeft()
 {
-	for (auto& object : objects)
-	{
-		object.position.x() -= 0.01;
-	}
+	m_camera.position().x += 0.1;
 }
 
 void GLHandler::translateRight()
 {
-	for (auto& object : objects)
-	{
-		object.position.x() += 0.01;
-	}
+	m_camera.position().x -= 0.1;
 }
 
 void GLHandler::translateUp()
 {
-	for (auto& object : objects)
-	{
-		object.position.y() += 0.01;
-	}
+	m_camera.position().z += 0.1;
 }
 
 void GLHandler::translateDown()
 {
-	for (auto& object : objects)
-	{
-		object.position.y() -= 0.01;
-	}
+	m_camera.position().z -= 0.1;
 }
 
 void GLHandler::translateDeep()
 {
-	for (auto& object : objects)
-	{
-		object.position.z() += 0.01;
-	}
+	m_camera.rotation().x -= 0.1;
 }
 
 void GLHandler::translateClose()
 {
-	for (auto& object : objects)
-	{
-		object.position.z() -= 0.01;
-	}
+	m_camera.rotation().x += 0.1;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -196,21 +178,10 @@ void GLHandler::render()
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	/*	GLint loc = glGetUniformLocation(shaderProgram, "rotMat");
-		if (loc != -1)
-		{
-			glUniformMatrix3fv(loc, 1, GL_FALSE, rotMat);
-		}
-
-		loc = glGetUniformLocation(shaderProgram, "projMat");
-		if (loc != -1)
-		{
-			glUniformMatrix4fv(loc, 1, GL_FALSE, projMat);
-		}
-		*/
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
+		view = glm::rotate(view, m_camera.rotation().x, glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::translate(view, m_camera.position());
 		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
@@ -265,6 +236,7 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 
 void GLHandler::init(vector<vector<float> >& initialObjects)
 {
+	m_camera.position() = glm::vec3(0.0, 0.0, 0.0);
 	initWindow();
 	initShaders();
 	initObjects(initialObjects);

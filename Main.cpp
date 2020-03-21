@@ -56,9 +56,25 @@ void generateObjects()
 
 	//objects.push_back(obj);
 	//objects.push_back(obj2);
-	objects.push_back(obj4);
-	objects.push_back(obj3);
+	//objects.push_back(obj4);
+	//objects.push_back(obj3);
+	vector<float> map;
+	for (float z = -15.0; z <= 15.0; z += 0.5)
+	{
+		for (float x = -15; x <= 15.0; x += 0.5)
+		{
+			float y = float(rand() % 100) * 0.005 - 0.5;
 
+			map.push_back(x);
+			map.push_back(y);
+			map.push_back(z);
+			map.push_back(x);
+			map.push_back(y);
+			map.push_back(z);
+		}
+	}
+
+	objects.push_back(map);
 
 }
 
