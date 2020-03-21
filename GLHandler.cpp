@@ -40,7 +40,7 @@ void GLHandler::translateRight()
 
 void GLHandler::translateUp()
 {
-	m_camera.position().z += 0.1;
+	m_camera.position() += m_camera.direction();
 }
 
 void GLHandler::translateDown()
@@ -157,6 +157,21 @@ void GLHandler::readStringFromFile(char* filename, char* str)
 	strcpy_s(str, MAX_SHADER_SIZE, s.data());
 }
 
+Camera *cameraForCallback;
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	cameraForCallback->rotation().y = xpos / 20.0;
+	cameraForCallback->rotation().x = ypos / 20.0;
+	if (cameraForCallback->rotation().y > 360.0)
+		cameraForCallback->rotation().y -= 360.0;
+	if (cameraForCallback->rotation().x > 360.0)
+		cameraForCallback->rotation().x -= 360.0;
+	if (cameraForCallback->rotation().y < 0.0)
+		cameraForCallback->rotation().y += 360.0;
+	if (cameraForCallback->rotation().x < 0.0)
+		cameraForCallback->rotation().x += 360.0;
+}
+
 void GLHandler::render()
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -167,7 +182,9 @@ void GLHandler::render()
 	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glEnable(GL_DEPTH_TEST);
-
+	cameraForCallback = &m_camera;
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
@@ -180,7 +197,10 @@ void GLHandler::render()
 
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
-		view = glm::rotate(view, m_camera.rotation().x, glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::rotate(view, glm::radians(m_camera.rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::rotate(view, glm::radians(m_camera.rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::vec4 direction = view * glm::vec4(0.0, 0.0, 1.0f, 0.0f);
+		m_camera.direction() = glm::vec3(-direction.x / 10, -direction.y / 10, direction.z / 10);
 		view = glm::translate(view, m_camera.position());
 		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -196,7 +216,6 @@ void GLHandler::render()
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
 
 		Sleep(10);
 	}
