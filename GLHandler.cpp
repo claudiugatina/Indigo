@@ -40,10 +40,12 @@ void GLHandler::translateRight()
 
 void GLHandler::translateUp()
 {
-	m_camera.position() += glm::vec3(
-		0.1 * (sin(glm::radians(m_camera.rotation().y))),
-		0.1 * (-sin(glm::radians(m_camera.rotation().x))), 
-		0.1 * (-cos(glm::radians(m_camera.rotation().x)) * cos(glm::radians(m_camera.rotation().y))));
+	m_speed += 0.001;
+	m_camera.position() += m_speed * glm::vec3(
+		(sin(glm::radians(m_camera.rotation().y))),
+		0.0f,
+		//(-sin(glm::radians(m_camera.rotation().x))), 
+		(-cos(glm::radians(m_camera.rotation().x)) * cos(glm::radians(m_camera.rotation().y))));
 }
 
 void GLHandler::translateDown()
@@ -265,7 +267,8 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 
 void GLHandler::init(vector<vector<float> >& initialObjects)
 {
-	m_camera.position() = glm::vec3(0.0, 3.0, 0.0);
+	m_camera.position() = glm::vec3(0.0, 6.0, 0.0);
+	m_speed = 0.1;
 	initWindow();
 	initShaders();
 	initObjects(initialObjects);

@@ -14,6 +14,34 @@ using namespace std;
 
 vector<vector<float> > objects;
 
+int segmentsBig = 100;
+int segmentsSmall = 31;
+
+int R = 50.0f;
+int r = 4.0f;
+
+
+vector<float> torrPoint(int i, int j)
+{
+		float angleBig = 360.0f / float(segmentsBig) * float(i);
+		float xBig = sin(angleBig) * R;
+		float yBig = 25.0f;
+		float zBig = cos(angleBig) * R;
+
+		float angleSmall = 360.0f / float(segmentsSmall) * float(j);
+		float xSmall = sin(angleBig) * (R + sin(angleSmall) * r);
+		float ySmall = yBig + cos(angleSmall);
+		float zSmall = cos(angleBig) * (R + sin(angleSmall) * r);
+
+		vector<float> res;
+
+		res.push_back(xSmall);
+		res.push_back(ySmall);
+		res.push_back(zSmall);
+
+		return res;
+}
+
 void generateObjects()
 {
 	vector<float> obj, obj2;
@@ -66,13 +94,13 @@ void generateObjects()
 		vector<float> row;
 		for (int j = 0; j < s; ++j)
 		{
-			row.push_back(float(rand() % 30) * 0.01 - 0.5);
+			row.push_back(float(rand() % 15) * 0.01 - 0.5);
 		}
 		mat.push_back(row);
 	}
 
 	vector<float> map;
-	double peak = 1.0;
+	double peak = 2.0;
 	for (int i = 0; i < s - 1; ++i)
 	{
 		for (int j = 0; j < s - 1; ++j)
@@ -112,7 +140,57 @@ void generateObjects()
 		}
 	}
 
+	vector<float> torrus;
+
+	for (int i = 0; i < segmentsBig - 1; ++i)
+	{
+		
+		for (int j = 0; j < segmentsSmall - 1; ++j)
+		{
+			vector<vector<float> > v;
+			v.push_back(torrPoint(i, j));
+			v.push_back(torrPoint(i, j + 1));
+			v.push_back(torrPoint(i + 1, j));
+			v.push_back(torrPoint(i + 1, j + 1));
+
+			float r = 1.0, g = 0.2, b = 1.0;
+
+			glm::vec3 normal123 = glm::triangleNormal(glm::vec3(v[0][0], v[0][1], v[0][2]), glm::vec3(v[1][0], v[1][1], v[1][2]), glm::vec3(v[2][0], v[2][1], v[2][2]));
+			if (normal123.y > 0.0)
+				normal123 = -normal123;
+
+			glm::vec3 normal234 = glm::triangleNormal(glm::vec3(v[3][0], v[3][1], v[0][2]), glm::vec3(v[1][0], v[1][1], v[1][2]), glm::vec3(v[2][0], v[2][1], v[2][2]));
+			if (normal234.y > 0.0)
+				normal234 = -normal234;
+
+			for (auto& vec : v)
+			{
+				vec.push_back(r);
+				vec.push_back(g);
+				vec.push_back(b);
+			}
+
+			for (int k = 0; k < 3; ++k)
+			{
+				torrus.insert(torrus.end(), v[k].begin(), v[k].end());
+				torrus.push_back(normal123.x);
+				torrus.push_back(normal123.y);
+				torrus.push_back(normal123.z);
+			}
+
+			for (int k = 1; k < 4; ++k)
+			{
+				torrus.insert(torrus.end(), v[k].begin(), v[k].end());
+				torrus.push_back(normal234.x);
+				torrus.push_back(normal234.y);
+				torrus.push_back(normal234.z);
+			}
+
+		}
+	}
+
 	objects.push_back(map);
+	objects.push_back(torrus);
 
 }
 
