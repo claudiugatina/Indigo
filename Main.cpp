@@ -20,6 +20,32 @@ int segmentsSmall = 20;
 float R = 50.0f;
 float r = 4.0f;
 
+const int s = 100;
+float mat[s][s];
+
+float gety(float x, float z)
+{
+	x += 50.0f;
+	z += 50.0f;
+	float xtr = float(int(x));
+	float ztr = float(int(z));
+	if (x - xtr < 1 - z + ztr)
+	{
+		float w1 = 1.0 / sqrt((x - xtr) * (x - xtr) + (z - ztr) * (z - ztr));
+		float w2 = 1.0 / sqrt((x - xtr - 1) * (x - xtr - 1) + (z - ztr) * (z - ztr));
+		float w3 = 1.0 / sqrt((x - xtr) * (x - xtr) + (z - ztr - 1) * (z - ztr - 1));
+		return (mat[int(x)][int(z)] * w1 + mat[int(x + 1)][int(z)] * w2 + mat[int(x)][int(z + 1)] * w3) / (w1 + w2 + w3) + 2.0;
+	}
+	else
+	{
+		float w1 = 1.0 / sqrt((x - xtr) * (x - xtr) + (z - ztr) * (z - ztr));
+		float w2 = 1.0 / sqrt((x - xtr - 1) * (x - xtr - 1) + (z - ztr) * (z - ztr));
+		float w3 = 1.0 / sqrt((x - xtr) * (x - xtr) + (z - ztr - 1) * (z - ztr - 1));
+		return (mat[int(x)][int(z)] * w1 + mat[int(x + 1)][int(z)] * w2 + mat[int(x)][int(z + 1)] * w3) / (w1 + w2 + w3) + 2.0;
+	}
+	return mat[int(x)][int(z)] + 2.0;
+}
+
 
 vector<float> torrPoint(int i, int j)
 {
@@ -87,16 +113,21 @@ void generateObjects()
 	//objects.push_back(obj2);
 	//objects.push_back(obj4);
 	//objects.push_back(obj3);
-	int s = 100;
-	vector<vector<float> > mat;
-	for (int i = 0; i < s; ++i)
+	mat[0][0] = -0.5;
+	for (int i = 1; i < s; ++i)
 	{
-		vector<float> row;
-		for (int j = 0; j < s; ++j)
+		mat[i][0] = mat[i - 1][0] + float(rand() % 10) * 0.1f - 0.45f;
+	}
+	for (int j = 1; j < s; ++j)
+	{
+		mat[0][j] = mat[0][j - 1] + float(rand() % 10) * 0.1f - 0.45f;
+	}
+	for (int i = 1; i < s; ++i)
+	{
+		for (int j = 1; j < s; ++j)
 		{
-			row.push_back(float(rand() % 15) * 0.01 - 0.5);
+			mat[i][j] = (mat[i - 1][j] + mat[i][j - 1]) / 2.0f + float(rand() % 15) * 0.05f - 0.25f;
 		}
-		mat.push_back(row);
 	}
 
 	vector<float> map;
@@ -106,14 +137,7 @@ void generateObjects()
 		for (int j = 0; j < s - 1; ++j)
 		{
 			float y1 = mat[i][j], y2 = mat[i][j + 1], y3 = mat[i + 1][j], y4 = mat[i + 1][j + 1];
-			y1 += peak * sin((double(i) / double(s)) * 3.14);
-			y2 += peak * sin((double(i) / double(s)) * 3.14);
-			y3 += peak * sin((double(i + 1) / double(s)) * 3.14);
-			y4 += peak * sin((double(i + 1) / double(s)) * 3.14);
-			y1 += peak * sin((double(j) / double(s)) * 3.14);
-			y2 += peak * sin((double(j + 1) / double(s)) * 3.14);
-			y3 += peak * sin((double(j) / double(s)) * 3.14);
-			y4 += peak * sin((double(j + 1) / double(s)) * 3.14);
+			
 			i -= s / 2;
 			j -= s / 2;
 			float x1 = i, x2 = i, x3 = i + 1, x4 = i + 1;

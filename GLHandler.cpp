@@ -124,6 +124,22 @@ int GLHandler::initWindow()
 	}
 }
 
+Camera *cameraForCallback;
+
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	cameraForCallback->rotation().y = xpos / 20.0;
+	cameraForCallback->rotation().x = ypos / 20.0;
+	if (cameraForCallback->rotation().y > 360.0)
+		cameraForCallback->rotation().y -= 360.0;
+	if (cameraForCallback->rotation().x > 360.0)
+		cameraForCallback->rotation().x -= 360.0;
+	if (cameraForCallback->rotation().y < 0.0)
+		cameraForCallback->rotation().y += 360.0;
+	if (cameraForCallback->rotation().x < 0.0)
+		cameraForCallback->rotation().x += 360.0;
+}
+
 void GLHandler::initShaders()
 {
 	readStringFromFile("vertexShader.txt", vertexShaderSource);
@@ -166,6 +182,17 @@ void GLHandler::initShaders()
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 	}
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glUseProgram(shaderProgram);
+
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glEnable(GL_DEPTH_TEST);
+	cameraForCallback = &m_camera;
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	// glDeleteShader(vertexShader);
 	// glDeleteShader(fragmentShader);
 
@@ -184,35 +211,9 @@ void GLHandler::readStringFromFile(char* filename, char* str)
 	
 	strcpy_s(str, MAX_SHADER_SIZE, s.data());
 }
-
-Camera *cameraForCallback;
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	cameraForCallback->rotation().y = xpos / 20.0;
-	cameraForCallback->rotation().x = ypos / 20.0;
-	if (cameraForCallback->rotation().y > 360.0)
-		cameraForCallback->rotation().y -= 360.0;
-	if (cameraForCallback->rotation().x > 360.0)
-		cameraForCallback->rotation().x -= 360.0;
-	if (cameraForCallback->rotation().y < 0.0)
-		cameraForCallback->rotation().y += 360.0;
-	if (cameraForCallback->rotation().x < 0.0)
-		cameraForCallback->rotation().x += 360.0;
-}
-
+extern float gety(float, float);
 void GLHandler::render()
 {
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glUseProgram(shaderProgram);
-
-	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(90.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
-	glEnable(GL_DEPTH_TEST);
-	cameraForCallback = &m_camera;
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	while (!glfwWindowShouldClose(window))
 	{
 		// input
@@ -224,6 +225,7 @@ void GLHandler::render()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		unsigned int cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
+		m_camera.position().y = gety(m_camera.position().x, m_camera.position().z);
 		glUniform3f(cameraPosLoc, m_camera.position().x, m_camera.position().y, m_camera.position().z);
 
 		glm::mat4 view = glm::mat4(1.0f);
@@ -291,7 +293,7 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 void GLHandler::init(vector<vector<float> >& initialObjects)
 {
 	m_camera.position() = glm::vec3(0.0, 6.0, 0.0);
-	m_speed = 0.1;
+	m_speed = 0.2;
 	initWindow();
 	initShaders();
 	initObjects(initialObjects);
