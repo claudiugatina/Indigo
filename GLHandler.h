@@ -77,13 +77,15 @@ class GLHandler
 
 	void processInput(GLFWwindow * window);
 
-	void translateLeft();
+	void sprint();
 
-	void translateRight();
+	void moveLeft();
 
-	void translateUp();
+	void moveRight();
 
-	void translateDown();
+	void moveForward();
+
+	void moveBackward();
 
 	void translateDeep();
 

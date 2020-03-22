@@ -9,16 +9,16 @@ void GLHandler::processInput(GLFWwindow *window)
 		glfwSetWindowShouldClose(window, true);
 
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		translateLeft();
+		moveLeft();
 
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		translateRight();
+		moveRight();
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		translateUp();
+		moveForward();
 
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		translateDown();
+		moveBackward();
 
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
 		translateDeep();
@@ -26,34 +26,54 @@ void GLHandler::processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
 		translateClose();
 
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+		sprint();
+
 }
 
-void GLHandler::translateLeft()
+void GLHandler::sprint()
 {
-	m_camera.position().x += 0.1;
+	m_speed = 1.0f;
 }
 
-void GLHandler::translateRight()
+void GLHandler::moveLeft()
 {
-	m_camera.position().x -= 0.1;
+	m_camera.position() += m_speed * glm::vec3(
+		-cos(glm::radians(m_camera.rotation().y)),
+		0.0f,
+		-sin(glm::radians(m_camera.rotation().y)));
+
+	m_speed = 0.1f;
 }
 
-void GLHandler::translateUp()
+void GLHandler::moveRight()
+{
+	m_camera.position() += m_speed * glm::vec3(
+		cos(glm::radians(m_camera.rotation().y)),
+		0.0f,
+		sin(glm::radians(m_camera.rotation().y)));
+
+	m_speed = 0.1f;
+}
+
+void GLHandler::moveForward()
 {
 	m_camera.position() += m_speed * glm::vec3(
 		(sin(glm::radians(m_camera.rotation().y))),
 		//0.0f,
 		(-sin(glm::radians(m_camera.rotation().x))), 
 		(-cos(glm::radians(m_camera.rotation().x)) * cos(glm::radians(m_camera.rotation().y))));
+	m_speed = 0.1f;
 }
 
-void GLHandler::translateDown()
+void GLHandler::moveBackward()
 {
 	m_camera.position() -= m_speed * glm::vec3(
 		(sin(glm::radians(m_camera.rotation().y))),
 		//0.0f,
 		(-sin(glm::radians(m_camera.rotation().x))),
 		(-cos(glm::radians(m_camera.rotation().x)) * cos(glm::radians(m_camera.rotation().y))));
+	m_speed = 0.1f;
 }
 
 void GLHandler::translateDeep()
