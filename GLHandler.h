@@ -21,9 +21,11 @@ class GLHandler
 {
 	Camera m_camera;
 
-	struct Vertex
+	struct VertexAttrib
 	{
 		float x, y, z;
+		float r, g, b;
+		float nx, ny, nz;
 	};
 
 	struct Object
@@ -35,7 +37,7 @@ class GLHandler
 		glm::mat4 transform;
 		GLuint VAO;
 		GLuint VBO;
-		float* vertexAttribPointer;
+		VertexAttrib* vertexAttribPointer;
 
 		Object() : position(0, 0, 0) {}
 
@@ -52,7 +54,7 @@ class GLHandler
 			glBindVertexArray(VAO);
 
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertexAttribPointer, GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttrib), vertexAttribPointer, GL_STATIC_DRAW);
 			glDrawArrays(GL_TRIANGLES, 0, size);
 		}
 	};
