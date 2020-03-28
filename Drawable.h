@@ -1,14 +1,17 @@
 #pragma once
-#include "GLHandler.h"
-#include "Camera.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 class Drawable
 {
-	bool visible;
 public:
 	virtual void draw() = 0;
+	Drawable();
+	~Drawable();
 protected:
-	unsigned int VAO;
-	unsigned int VBO;
+	bool visible;
+	GLuint VAO;
+	GLuint VBO;
 };
 

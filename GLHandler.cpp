@@ -142,7 +142,7 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 
 void GLHandler::initShaders()
 {
-	vector<string> shaderSources = { "vertexShader.vs", "fragmentShader.fs" };
+	vector<string> shaderSources = { "vertexShader.vs", "geometryShader.gs", "fragmentShader.fs" };
 	shaderProgram = new ShaderProgram(shaderSources);
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -175,6 +175,7 @@ void GLHandler::render()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
+		shaderProgram->setUniform1f(string("time"), glfwGetTime());
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
 		view = glm::rotate(view, glm::radians(m_camera.rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));

@@ -64,6 +64,11 @@ void Shader::setShaderType(string extension)
 		shaderIdentifier = glCreateShader(GL_FRAGMENT_SHADER);
 		return;
 	}
+	if (extension == string("gs"))
+	{
+		shaderIdentifier = glCreateShader(GL_GEOMETRY_SHADER);
+		return;
+	}
 	cout << "SHADER EXTENSION NOT RECOGNIZED\n";
 }
 

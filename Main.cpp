@@ -7,7 +7,6 @@
 #include <cmath>
 #include "Direction.h"
 #include "Position.h"
-#include "Triangle.h"
 #include <gtx/normal.hpp>
 
 using namespace std;
@@ -126,7 +125,7 @@ void generateObjects()
 	{
 		for (int j = 1; j < s; ++j)
 		{
-			mat[i][j] = (mat[i - 1][j] + mat[i][j - 1]) / 2.0f + float(rand() % 3) * 0.025f - 0.25f;
+			mat[i][j] = (mat[i - 1][j] + mat[i][j - 1]) / 2.0f + float(rand() % 10) * 0.02f - 0.1f;
 		}
 	}
 
@@ -144,7 +143,7 @@ void generateObjects()
 			float z1 = j, z2 = j + 1, z3 = j, z4 = j + 1;
 			i += s / 2;
 			j += s / 2;
-			float r = 1.0, g = 0.2, b = 1.0;
+			float r = 0.0, g = 0.5, b = 1.0;
 			glm::vec3 normal123 = glm::triangleNormal(glm::vec3(x1, y1, z1), glm::vec3(x2, y2, z2), glm::vec3(x3, y3, z3));
 			if (normal123.y < 0.0)
 				normal123 = -normal123;

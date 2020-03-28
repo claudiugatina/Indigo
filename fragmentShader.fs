@@ -1,10 +1,10 @@
 #version 330 core
 
-in float viewAngle;
+in float viewAnglez;
 out vec4 FragColor;
-in vec3 colorOut;
+in vec3 colorOutz;
 
 void main()
 {
-	FragColor = vec4(colorOut * viewAngle, 1.0f);
+	FragColor = vec4(colorOutz * viewAnglez, 1.0f);
 };

@@ -11,7 +11,7 @@
 
 using namespace std;
 
-class Object //: public Drawable
+class Object : public Drawable
 {
 public:
 	Object();
@@ -22,8 +22,8 @@ public:
 	glm::vec3 position;
 	float scale;
 	glm::mat4 transform;
-	GLuint VAO;
-	GLuint VBO;
+	//GLuint VAO;
+	//GLuint VBO;
 	VertexAttribute* vertexAttribPointer;
 
 	//Object() : position(0, 0, 0) {}
