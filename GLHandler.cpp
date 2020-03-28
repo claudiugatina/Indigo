@@ -142,53 +142,16 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 
 void GLHandler::initShaders()
 {
-	readStringFromFile("vertexShader.txt", vertexShaderSource);
-	readStringFromFile("fragmentShader.txt", fragmentShaderSource);
+	vector<string> shaderSources = { "vertexShader.vs", "fragmentShader.fs" };
+	shaderProgram = new ShaderProgram(shaderSources);
 
-	const GLchar* vertexShaderSourceLocal = vertexShaderSource;
-	const GLchar* fragmentShaderSourceLocal = fragmentShaderSource;
-
-	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSourceLocal, NULL);
-	glCompileShader(vertexShader);
-	// check for shader compile errors
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	// fragment shader
-	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSourceLocal, NULL);
-	glCompileShader(fragmentShader);
-	// check for shader compile errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-	// link shaders
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	// check for linking errors
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if (!success) {
-		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glUseProgram(shaderProgram);
+	shaderProgram->use();
 
 	glm::mat4 projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
-	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	shaderProgram->setUniformMat4(string("projection"), projection);
+
 	glEnable(GL_DEPTH_TEST);
 	cameraForCallback = &m_camera;
 	glfwSetCursorPosCallback(window, cursor_position_callback);
@@ -198,19 +161,6 @@ void GLHandler::initShaders()
 
 }
 
-void GLHandler::readStringFromFile(char* filename, char* str)
-{
-	fstream f(filename, ios::in);
-	
-	char c;
-	string s;
-	while (f >> noskipws >> c)
-	{
-		s += c;
-	}
-	
-	strcpy_s(str, MAX_SHADER_SIZE, s.data());
-}
 extern float gety(float, float);
 void GLHandler::render()
 {
@@ -224,22 +174,17 @@ void GLHandler::render()
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		unsigned int cameraPosLoc = glGetUniformLocation(shaderProgram, "cameraPos");
-		m_camera.position().y = gety(m_camera.position().x, m_camera.position().z);
-		glUniform3f(cameraPosLoc, m_camera.position().x, m_camera.position().y, m_camera.position().z);
-
+		shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
 		view = glm::rotate(view, glm::radians(m_camera.rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = glm::rotate(view, glm::radians(m_camera.rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = glm::translate(view, -m_camera.position());
-		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		shaderProgram->setUniformMat4(string("view"), view);
 
 		for (auto& obj : objects)
 		{
-			unsigned int transformLoc = glGetUniformLocation(shaderProgram, "model");
-			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(obj.transform));
+			shaderProgram->setUniformMat4("model", obj.transform);
 			obj.draw();
 		}
 

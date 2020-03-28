@@ -151,8 +151,8 @@
     <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fragmentShader.txt" />
-    <Text Include="vertexShader.txt" />
+    <Text Include="fragmentShader.fs" />
+    <Text Include="vertexShader.vs" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OpenGLYT.rc" />

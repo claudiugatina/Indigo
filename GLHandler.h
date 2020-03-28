@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "Object.h"
+#include "ShaderProgram.h"
 
 using namespace std;
 
@@ -28,15 +29,11 @@ class GLHandler
 	float m_speed;
 
 	GLFWwindow* window;
-	int shaderProgram;
+	ShaderProgram* shaderProgram;
 
 	// settings
 	const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
-
-	char vertexShaderSource[MAX_SHADER_SIZE];
-
-	char fragmentShaderSource[MAX_SHADER_SIZE];
 
 	vector<Object> objects;
 
@@ -59,8 +56,6 @@ class GLHandler
 	static void framebuffer_size_callback(GLFWwindow * window, int width, int height);
 
 	int initWindow();
-
-	void readStringFromFile(char* filename, char* str);
 
 	void initShaders();
 
