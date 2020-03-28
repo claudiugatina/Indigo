@@ -126,10 +126,14 @@
     <ClCompile Include="GLHandler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="Position.cpp" />
     <ClCompile Include="Rotation.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -137,10 +141,14 @@
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="GLHandler.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Rotation.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Triangle.h" />
+    <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragmentShader.txt" />

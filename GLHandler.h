@@ -12,55 +12,20 @@
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
 #include "Camera.h"
+#include "ShaderProgram.h"
+#include "Object.h"
 
 using namespace std;
 
 const unsigned int MAX_SHADER_SIZE = 5000;
 
+// don't know why the compiler complains if I don't declare this here
+class Object;
+
 class GLHandler
 {
 	Camera m_camera;
 	float m_speed;
-
-	struct VertexAttrib
-	{
-		float x, y, z;
-		float r, g, b;
-		float nx, ny, nz;
-	};
-
-	struct Object
-	{
-		int size;
-		Rotation rotation;
-		Position position;
-		float scale;
-		glm::mat4 transform;
-		GLuint VAO;
-		GLuint VBO;
-		VertexAttrib* vertexAttribPointer;
-
-		Object() : position(0, 0, 0) {}
-
-		void calcTransform()
-		{
-			transform = glm::mat4(1.0f);
-			transform = glm::translate(transform, glm::vec3(position.x(), position.y(), position.z()));
-		//	transform = glm::rotate(transform, glm::vec3(rotation.roll(), rotation.pitch(), rotation.skew()));
-		}
-
-		void draw()
-		{
-			calcTransform();
-			glBindVertexArray(VAO);
-
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttrib), vertexAttribPointer, GL_STATIC_DRAW);
-			glDrawArrays(GL_TRIANGLES, 0, size);
-		}
-	};
-
-
 
 	GLFWwindow* window;
 	int shaderProgram;

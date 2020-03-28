@@ -186,7 +186,7 @@ void GLHandler::initShaders()
 	glUseProgram(shaderProgram);
 
 	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
 	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 	glEnable(GL_DEPTH_TEST);
@@ -255,39 +255,8 @@ void GLHandler::render()
 
 void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 {
-	int floatsPerAttrib = sizeof(VertexAttrib) / sizeof(float);
-	for (int i = 0; i < initialObjects.size(); ++i)
-	{
-		Object obj;
-		obj.size = initialObjects[i].size() / floatsPerAttrib;
-		obj.vertexAttribPointer = new VertexAttrib[obj.size];
-		memcpy(obj.vertexAttribPointer, &initialObjects[i][0], initialObjects[i].size() * sizeof(float));
-
-		glGenVertexArrays(1, &obj.VAO);
-		glGenBuffers(1, &obj.VBO);
-
-		glBindVertexArray(obj.VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, obj.VBO);
-		glBufferData(GL_ARRAY_BUFFER, obj.size * sizeof(VertexAttrib), obj.vertexAttribPointer, GL_STATIC_DRAW);
-
-		// declared only for pointer arithmetic below
-		VertexAttrib x;
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttrib), (void*)((int)&x.x - (int)&x));
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttrib), (void*)((int)&x.r - (int)&x));
-		glEnableVertexAttribArray(1);
-
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, sizeof(VertexAttrib), (void*)((int)&x.nx - (int)&x));
-		glEnableVertexAttribArray(2);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-
-		objects.push_back(obj);
-	}
-
+	for (auto & rawVector : initialObjects)
+		objects.push_back(Object(rawVector));
 }
 
 void GLHandler::init(vector<vector<float> >& initialObjects)

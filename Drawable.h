@@ -4,8 +4,9 @@
 
 class Drawable
 {
+	bool visible;
 public:
-	virtual void draw(GLHandler & gl) = 0;
+	virtual void draw() = 0;
 protected:
 	unsigned int VAO;
 	unsigned int VBO;
