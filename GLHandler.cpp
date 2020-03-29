@@ -142,15 +142,14 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 
 void GLHandler::initShaders()
 {
-	vector<string> shaderSources = { "vertexShader.vs", "geometryShader.gs", "fragmentShader.fs" };
-	shaderProgram = new ShaderProgram(shaderSources);
+	rippleShader.shaderProgram = new ShaderProgram("wavesShaderProgram.sp");
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	shaderProgram->use();
+	rippleShader.shaderProgram->use();
 
 	glm::mat4 projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
-	shaderProgram->setUniformMat4(string("projection"), projection);
+	rippleShader.shaderProgram->setUniformMat4(string("projection"), projection);
 
 	glEnable(GL_DEPTH_TEST);
 	cameraForCallback = &m_camera;
@@ -159,9 +158,19 @@ void GLHandler::initShaders()
 	// glDeleteShader(vertexShader);
 	// glDeleteShader(fragmentShader);
 
+	standardShader.shaderProgram = new ShaderProgram("standardShaderProgram.sp");
+
+	standardShader.shaderProgram->use();
+
+	standardShader.shaderProgram->setUniformMat4(string("projection"), projection);
+
+	glEnable(GL_DEPTH_TEST);
+	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 extern float gety(float, float);
+
 void GLHandler::render()
 {
 	while (!glfwWindowShouldClose(window))
@@ -174,19 +183,31 @@ void GLHandler::render()
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
-		shaderProgram->setUniform1f(string("time"), glfwGetTime());
+		rippleShader.shaderProgram->use();
+		rippleShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
+		rippleShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
 		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
 		view = glm::rotate(view, glm::radians(m_camera.rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = glm::rotate(view, glm::radians(m_camera.rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 		view = glm::translate(view, -m_camera.position());
-		shaderProgram->setUniformMat4(string("view"), view);
+		rippleShader.shaderProgram->setUniformMat4(string("view"), view);
 
-		for (auto& obj : objects)
+		for (auto& obj : rippleShader.objects)
 		{
-			shaderProgram->setUniformMat4("model", obj.transform);
-			obj.draw();
+			rippleShader.shaderProgram->setUniformMat4("model", obj->transform);
+			obj->draw();
+		}
+
+		standardShader.shaderProgram->use();
+		standardShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
+		standardShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
+		standardShader.shaderProgram->setUniformMat4(string("view"), view);
+
+		for (auto& obj : standardShader.objects)
+		{
+			standardShader.shaderProgram->setUniformMat4("model", obj->transform);
+			obj->draw();
 		}
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -201,8 +222,11 @@ void GLHandler::render()
 
 void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 {
-	for (auto & rawVector : initialObjects)
-		objects.push_back(Object(rawVector));
+	// TODO: not hardcode this:
+	rippleShader.objects.push_back(new Object(initialObjects[0]));
+	standardShader.objects.push_back(new Object(initialObjects[1]));
+//	for (auto & rawVector : initialObjects)
+//		objects.push_back(Object(rawVector));
 }
 
 void GLHandler::init(vector<vector<float> >& initialObjects)

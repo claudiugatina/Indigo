@@ -125,7 +125,7 @@ void generateObjects()
 	{
 		for (int j = 1; j < s; ++j)
 		{
-			mat[i][j] = (mat[i - 1][j] + mat[i][j - 1]) / 2.0f + float(rand() % 10) * 0.02f - 0.1f;
+			mat[i][j] = (mat[i - 1][j] + mat[i][j - 1]) / 2.0f + float(rand() % 10) * 0.1f - 0.45f;
 		}
 	}
 

@@ -23,19 +23,26 @@ const unsigned int MAX_SHADER_SIZE = 5000;
 // don't know why the compiler complains if I don't declare this here
 class Object;
 
+struct ShaderAndSubscribers
+{
+	ShaderProgram * shaderProgram;
+	// vector of pointers to objects, because one object may be drawn by more than on shader
+	vector<Object*> objects;
+};
+
 class GLHandler
 {
 	Camera m_camera;
 	float m_speed;
 
 	GLFWwindow* window;
-	ShaderProgram* shaderProgram;
+
+	ShaderAndSubscribers standardShader;
+	ShaderAndSubscribers rippleShader;
 
 	// settings
 	const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
-
-	vector<Object> objects;
 
 	void processInput(GLFWwindow * window);
 

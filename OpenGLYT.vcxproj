@@ -131,6 +131,7 @@
     <ClCompile Include="Rotation.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -144,17 +145,22 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fragmentShader.fs" />
-    <Text Include="vertexShader.vs" />
+    <Text Include="wavesFragmentShader.fs" />
+    <Text Include="wavesVertexShader.vs" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OpenGLYT.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="geometryShader.gs" />
+    <None Include="standardFragmentShader.fs" />
+    <None Include="wavesGeometryShader.gs" />
+    <None Include="standardShaderProgram.sp" />
+    <None Include="wavesShaderProgram.sp" />
+    <None Include="standardVertexShader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

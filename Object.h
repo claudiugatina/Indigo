@@ -31,6 +31,6 @@ public:
 	Object(vector<float> rawFloats);
 
 	void calcTransform();
-	void draw();
+	virtual void draw();
 };
 

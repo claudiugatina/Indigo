@@ -15,6 +15,7 @@ private:
 	void linkShaders();
 public:
 	ShaderProgram();
+	ShaderProgram(string shaderProgramFileName);
 	ShaderProgram(vector<string> shaderFileNames);
 	void setUniformMat4(string variableName, glm::mat4 & value);
 	void setUniform1f(string variableName, float value);

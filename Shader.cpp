@@ -83,6 +83,7 @@ void Shader::readStringFromFile(string filename, string& filetext)
 	{
 		filetext += c;
 	}
+	f.close();
 }
 
 Shader::~Shader()

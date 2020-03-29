@@ -6,6 +6,19 @@ ShaderProgram::ShaderProgram()
 {
 }
 
+ShaderProgram::ShaderProgram(string shaderProgramFileName)
+{
+	fstream file(shaderProgramFileName.data(), ios::in);
+
+	vector<string> shaderFileNames;
+	string shaderFileName;
+	while (file >> shaderFileName)
+		shaderFileNames.push_back(shaderFileName);
+	*this = ShaderProgram(shaderFileNames);
+
+	file.close();
+}
+
 ShaderProgram::ShaderProgram(vector<string> shaderFileNames)
 {
 	shaderProgramIdentifier = glCreateProgram();

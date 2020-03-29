@@ -26,12 +26,15 @@ Object::Object(vector<float> rawFloats)
 
 	// declared only for pointer arithmetic below
 	VertexAttribute x;
+	// position
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.x - (int)&x));
 	glEnableVertexAttribArray(0);
 
+	// color
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.r - (int)&x));
 	glEnableVertexAttribArray(1);
 
+	// normal
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, sizeof(VertexAttribute), (void*)((int)&x.nx - (int)&x));
 	glEnableVertexAttribArray(2);
 

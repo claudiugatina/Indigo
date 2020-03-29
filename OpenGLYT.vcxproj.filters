@@ -54,6 +54,9 @@
     <ClCompile Include="VertexAttribute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLHandler.h">
@@ -89,12 +92,15 @@
     <ClInclude Include="VertexAttribute.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fragmentShader.fs">
+    <Text Include="wavesFragmentShader.fs">
       <Filter>Source Files</Filter>
     </Text>
-    <Text Include="vertexShader.vs">
+    <Text Include="wavesVertexShader.vs">
       <Filter>Source Files</Filter>
     </Text>
   </ItemGroup>
@@ -104,7 +110,19 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="geometryShader.gs">
+    <None Include="wavesShaderProgram.sp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="wavesGeometryShader.gs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="standardFragmentShader.fs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="standardShaderProgram.sp">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="standardVertexShader.vs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
