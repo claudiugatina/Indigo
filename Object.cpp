@@ -54,6 +54,7 @@ void Object::draw()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), vertexAttribPointer, GL_STATIC_DRAW);
+	// apparently the next line is not needed. This should speed things up for static objects
+	//glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), vertexAttribPointer, GL_STATIC_DRAW);
 	glDrawArrays(GL_TRIANGLES, 0, size);
 }

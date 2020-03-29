@@ -67,6 +67,57 @@ vector<float> torrPoint(int i, int j)
 		return res;
 }
 
+int sphereResolution = 100;
+float radius = 15.0f;
+
+glm::vec3 spherePoint(int i, int j)
+{
+	float anglex = 6.28f / float(sphereResolution) * float(j);
+	float angley = 6.28f / float(sphereResolution) * float(i);
+
+	glm::vec3 res;
+
+	res.x = radius * sin(anglex) * sin(angley);
+	res.y = radius * cos(anglex);
+	res.z = radius * sin(anglex) * cos(angley);
+
+	return res;
+}
+
+void pushSquare(vector<float>& res, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, glm::vec3 norm123, glm::vec3 norm234, glm::vec3 rgb)
+{
+	vector<float> toPush = {
+		p1.x, p1.y, p1.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
+		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
+		p3.x, p3.y, p3.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
+
+		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
+		p3.x, p3.y, p3.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
+		p4.x, p4.y, p4.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
+	};
+
+	res.insert(res.end(), toPush.begin(), toPush.end());
+}
+
+vector<float> generateSphere()
+{
+	vector<float> res;
+	for (int i = 0; i < sphereResolution; ++i)
+	{
+		for (int j = 0; j < sphereResolution; ++j)
+		{
+			glm::vec3 p1 = spherePoint(i, j), p2 = spherePoint(i, j + 1), p3 = spherePoint(i + 1, j), p4 = spherePoint(i + 1, j + 1);
+			glm::vec3 norm123 = glm::triangleNormal(p1, p2, p3);
+			glm::vec3 norm234 = glm::triangleNormal(p2, p3, p4);
+			glm::vec3 rgb(1.0, 0.2, 1.0);
+
+			pushSquare(res, p1, p2, p3, p4, norm123, norm234, rgb);
+
+		}
+	}
+	return res;
+}
+
 void generateObjects()
 {
 	vector<float> obj, obj2;
@@ -143,7 +194,7 @@ void generateObjects()
 			float z1 = j, z2 = j + 1, z3 = j, z4 = j + 1;
 			i += s / 2;
 			j += s / 2;
-			float r = 0.0, g = 0.5, b = 1.0;
+			float r = 1.0, g = 0.2, b = 1.0;
 			glm::vec3 normal123 = glm::triangleNormal(glm::vec3(x1, y1, z1), glm::vec3(x2, y2, z2), glm::vec3(x3, y3, z3));
 			if (normal123.y < 0.0)
 				normal123 = -normal123;
@@ -214,6 +265,7 @@ void generateObjects()
 
 	objects.push_back(map);
 	objects.push_back(torrus);
+	objects.push_back(generateSphere());
 
 }
 

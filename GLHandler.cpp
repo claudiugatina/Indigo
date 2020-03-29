@@ -225,6 +225,7 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	// TODO: not hardcode this:
 	rippleShader.objects.push_back(new Object(initialObjects[0]));
 	standardShader.objects.push_back(new Object(initialObjects[1]));
+	rippleShader.objects.push_back(new Object(initialObjects[2]));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
 }
