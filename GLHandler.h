@@ -17,20 +17,12 @@
 #include "ShaderProgram.h"
 #include "Object.h"
 #include "ShaderProgram.h"
+#include "StandardShaderProgram.h"
+#include "RippleShaderProgram.h"
 
 using namespace std;
 
 const unsigned int MAX_SHADER_SIZE = 5000;
-
-// don't know why the compiler complains if I don't declare this here
-class Object;
-
-struct ShaderAndSubscribers
-{
-	ShaderProgram * shaderProgram;
-	// vector of pointers to objects, because one object may be drawn by more than on shader
-	vector<Object*> objects;
-};
 
 class GLHandler
 {
@@ -40,8 +32,8 @@ class GLHandler
 
 	GLFWwindow* window;
 
-	ShaderAndSubscribers standardShader;
-	ShaderAndSubscribers rippleShader;
+	StandardShaderProgram * standardShader;
+	RippleShaderProgram * rippleShader;
 
 	// settings
 	const unsigned int SCR_WIDTH = 1200;

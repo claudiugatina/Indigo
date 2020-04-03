@@ -277,7 +277,6 @@ int main()
 {
 	
 	generateObjects();
-
 	GLHandler glHandler;
 	glHandler.run(objects);
 

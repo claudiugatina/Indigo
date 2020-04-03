@@ -9,7 +9,7 @@ out vec3 colorVerToGeom;
 
 void main()
 {
-	vec3 wavedPos = vec3(aPos.x, aPos.y + 5.0 * sin(-time*10 + 0.3 * sqrt(aPos.x * aPos.x + aPos.z * aPos.z)), aPos.z);
+	vec3 wavedPos = vec3(aPos.x, aPos.y + 0.2 * sin(-time*10 + 0.3 * sqrt(2000 * aPos.x * aPos.x + 2000 * aPos.z * aPos.z)), aPos.z);
 	colorVerToGeom = colorIn; 
     gl_Position = MVP * vec4(wavedPos, 1.0);
 }

@@ -13,14 +13,18 @@ private:
 	GLuint shaderProgramIdentifier;
 
 	void linkShaders();
-public:
-	ShaderProgram();
-	ShaderProgram(string shaderProgramFileName);
-	ShaderProgram(vector<string> shaderFileNames);
+
+protected:
 	void setUniformMat4(string variableName, glm::mat4 & value);
 	void setUniform1f(string variableName, float value);
 	void setUniform3f(string variableName, glm::vec3 value);
-	void use();
+
+	virtual void use();
+	
+	ShaderProgram();
+	ShaderProgram(string shaderProgramFileName);
+	ShaderProgram(vector<string> shaderFileNames);
+public:
 	virtual ~ShaderProgram();
 };
 

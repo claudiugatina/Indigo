@@ -128,10 +128,12 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Orientation.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="RippleShaderProgram.cpp" />
     <ClCompile Include="Rotation.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="StandardShaderProgram.cpp" />
     <ClCompile Include="VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,12 +142,14 @@
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="GLHandler.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="RippleShaderProgram.h" />
     <ClInclude Include="Rotation.h" />
     <ClInclude Include="Position.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="StandardShaderProgram.h" />
     <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>
