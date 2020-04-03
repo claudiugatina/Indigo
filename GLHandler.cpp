@@ -28,7 +28,7 @@ void GLHandler::processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 		sprint();
-	//m_camera.position() = 15.5f * glm::normalize(m_camera.position());
+	m_camera.position() = 15.5f * glm::normalize(m_camera.position());
 }
 
 void GLHandler::sprint()
@@ -38,20 +38,21 @@ void GLHandler::sprint()
 
 void GLHandler::moveLeft()
 {
-	m_camera.position() -= m_speed * glm::cross(m_camera.direction(), glm::vec3(0.0f, 1.0f, 0.0f));
+	m_camera.position() -= m_speed * glm::normalize(glm::cross(m_camera.direction(), m_camera.position()));
 
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveRight()
 {
-	m_camera.position() += m_speed * glm::cross(m_camera.direction(), glm::vec3(0.0f, 1.0f, 0.0f));
+	m_camera.position() += m_speed * glm::normalize(glm::cross(m_camera.direction(), m_camera.position()));
 
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveForward()
 {
+	// TODO: change direction also so that you don't have to keep moving the mouse down when moving forward
 	m_camera.position() += m_speed * m_camera.direction();
 	m_speed = 0.1f;
 }
@@ -119,21 +120,23 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 	static double x, y;
 	glm::vec3& d = cameraForCallback->direction();
 	glm::vec3& r = cameraForCallback->rotation();
+	glm::vec3& u = cameraForCallback->up();
+	glm::vec3& p = cameraForCallback->position();
 	r.y += (xpos - x) / 200.0;
+	u = glm::normalize(p);
+	d = glm::normalize(d + float(xpos - x) / 2000.0f * glm::cross(d, p) - float(ypos - y) / 2000.0f * p);
 	x = xpos;
-	r.x += (ypos - y) / 200.0;
+	//r.x += (ypos - y) / 200.0;
 	y = ypos;
-	if (r.y > 2 * pi)
-		r.y -= 2 * pi;
-	if (r.y < -2 * pi)
-		r.y += 2 * pi;
-	if (r.x > 1.5)
-		r.x = 1.5;
-	if (r.x < -1.5)
-		r.x = -1.5;
-	d.x = sin(r.y) * cos(r.x);
-	d.z = -cos(r.y) * cos(r.x);
-	d.y = -sin(r.x);
+	//if (r.y > 2 * pi)
+	//	r.y -= 2 * pi;
+	//if (r.y < -2 * pi)
+	//	r.y += 2 * pi;
+	//if (r.x > 1.5)
+	//	r.x = 1.5;
+	//if (r.x < -1.5)
+	//	r.x = -1.5;
+	
 }
 
 void GLHandler::initShaders()
@@ -179,8 +182,8 @@ void GLHandler::render()
 		rippleShader.shaderProgram->use();
 		rippleShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
 		rippleShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
-		// note that we're translating the scene in the reverse direction of where we want to move
-		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), glm::vec3(0.0, 1.0, 0.0));
+
+		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_camera.position() + m_camera.up());
 
 		glm::mat4 VP = m_projectionMatrix * view;
 
