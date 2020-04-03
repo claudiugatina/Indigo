@@ -20,6 +20,7 @@ public:
 	int size;
 	glm::vec3 rotation;
 	glm::vec3 position;
+	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 1.0f);
 	float scale;
 	glm::mat4 transform;
 	//GLuint VAO;

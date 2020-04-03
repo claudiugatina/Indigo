@@ -35,6 +35,7 @@ struct ShaderAndSubscribers
 class GLHandler
 {
 	Camera m_camera;
+	Object m_character;
 	float m_speed;
 
 	GLFWwindow* window;
@@ -43,8 +44,8 @@ class GLHandler
 	ShaderAndSubscribers rippleShader;
 
 	// settings
-	const unsigned int SCR_WIDTH = 800;
-	const unsigned int SCR_HEIGHT = 600;
+	const unsigned int SCR_WIDTH = 1200;
+	const unsigned int SCR_HEIGHT = 1000;
 
 	glm::mat4 m_projectionMatrix;
 

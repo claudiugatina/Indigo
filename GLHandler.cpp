@@ -28,7 +28,7 @@ void GLHandler::processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 		sprint();
-	m_camera.position() = 15.5f * glm::normalize(m_camera.position());
+	m_character.position = 15.5f * glm::normalize(m_character.position);
 }
 
 void GLHandler::sprint()
@@ -38,14 +38,14 @@ void GLHandler::sprint()
 
 void GLHandler::moveLeft()
 {
-	m_camera.position() -= m_speed * glm::normalize(glm::cross(m_camera.direction(), m_camera.position()));
+	m_character.position -= m_speed * glm::normalize(glm::cross(m_character.direction, m_character.position));
 
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveRight()
 {
-	m_camera.position() += m_speed * glm::normalize(glm::cross(m_camera.direction(), m_camera.position()));
+	m_character.position += m_speed * glm::normalize(glm::cross(m_character.direction, m_character.position));
 
 	m_speed = 0.1f;
 }
@@ -53,13 +53,13 @@ void GLHandler::moveRight()
 void GLHandler::moveForward()
 {
 	// TODO: change direction also so that you don't have to keep moving the mouse down when moving forward
-	m_camera.position() += m_speed * m_camera.direction();
+	m_character.position += m_speed * m_character.direction;
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveBackward()
 {
-	m_camera.position() -= m_speed * m_camera.direction();
+	m_character.position -= m_speed * m_character.direction;
 	m_speed = 0.1f;
 }
 
@@ -111,31 +111,17 @@ int GLHandler::initWindow()
 	}
 }
 
-// TODO: find a way to not have to use a global camera
-Camera *cameraForCallback;
+// TODO: find a way to not have to use a globals
+Object *character;
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	const float pi = 3.14159;
 	static double x, y;
-	glm::vec3& d = cameraForCallback->direction();
-	glm::vec3& r = cameraForCallback->rotation();
-	glm::vec3& u = cameraForCallback->up();
-	glm::vec3& p = cameraForCallback->position();
-	r.y += (xpos - x) / 200.0;
-	u = glm::normalize(p);
+	glm::vec3& d = character->direction;
+	glm::vec3& p = character->position;
 	d = glm::normalize(d + float(xpos - x) / 2000.0f * glm::cross(d, p) - float(ypos - y) / 2000.0f * p);
 	x = xpos;
-	//r.x += (ypos - y) / 200.0;
 	y = ypos;
-	//if (r.y > 2 * pi)
-	//	r.y -= 2 * pi;
-	//if (r.y < -2 * pi)
-	//	r.y += 2 * pi;
-	//if (r.x > 1.5)
-	//	r.x = 1.5;
-	//if (r.x < -1.5)
-	//	r.x = -1.5;
 	
 }
 
@@ -150,7 +136,7 @@ void GLHandler::initShaders()
 	m_projectionMatrix = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
 
 	glEnable(GL_DEPTH_TEST);
-	cameraForCallback = &m_camera;
+	character = &m_character;
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	// glDeleteShader(vertexShader);
@@ -183,7 +169,9 @@ void GLHandler::render()
 		rippleShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
 		rippleShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
 
-		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_camera.position() + m_camera.up());
+		m_camera.position() = m_character.position - 5.0f * m_character.direction;
+		m_camera.direction() = m_character.direction;
+		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_camera.position());
 
 		glm::mat4 VP = m_projectionMatrix * view;
 
@@ -218,6 +206,9 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	//rippleShader.objects.push_back(new Object(initialObjects[0]));
 	//standardShader.objects.push_back(new Object(initialObjects[1]));
 	standardShader.objects.push_back(new Object(initialObjects[2]));
+	m_character = Object(initialObjects[3]);
+	m_character.position = glm::vec3(0.0f, 15.5f, 0.0f);
+	standardShader.objects.push_back(&m_character);
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
 }

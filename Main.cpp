@@ -86,8 +86,7 @@ glm::vec3 spherePoint(int i, int j)
 
 void pushSquare(vector<float>& res, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, glm::vec3 norm123, glm::vec3 norm234, glm::vec3 rgb)
 {
-	float ra = (rand() % 20) / 100.0;
-	rgb -= ra;
+	rgb = (p1 + p2 + p3 + p4) / 120.0f + 0.5f;
 	vector<float> toPush = {
 		p1.x, p1.y, p1.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
 		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
@@ -267,6 +266,9 @@ void generateObjects()
 
 	objects.push_back(map);
 	objects.push_back(torrus);
+	objects.push_back(generateSphere());
+	// TODO: Fix this mechanism, pass things as parameters, or make a class for a sphere, Jesus...
+	radius = 0.5f;
 	objects.push_back(generateSphere());
 
 }
