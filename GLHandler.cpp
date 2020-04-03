@@ -182,8 +182,6 @@ void GLHandler::render()
 		// note that we're translating the scene in the reverse direction of where we want to move
 		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), glm::vec3(0.0, 1.0, 0.0));
 
-		view = glm::translate(view, -m_camera.position());
-
 		glm::mat4 VP = m_projectionMatrix * view;
 
 		for (auto& obj : rippleShader.objects)
@@ -194,7 +192,6 @@ void GLHandler::render()
 
 		standardShader.shaderProgram->use();
 		standardShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
-		standardShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
 
 		for (auto& obj : standardShader.objects)
 		{
@@ -215,8 +212,8 @@ void GLHandler::render()
 void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 {
 	// TODO: not hardcode this:
-	rippleShader.objects.push_back(new Object(initialObjects[0]));
-	standardShader.objects.push_back(new Object(initialObjects[1]));
+	//rippleShader.objects.push_back(new Object(initialObjects[0]));
+	//standardShader.objects.push_back(new Object(initialObjects[1]));
 	standardShader.objects.push_back(new Object(initialObjects[2]));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
