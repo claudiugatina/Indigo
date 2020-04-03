@@ -38,41 +38,27 @@ void GLHandler::sprint()
 
 void GLHandler::moveLeft()
 {
-	m_camera.position() += m_speed * glm::vec3(
-		-cos(glm::radians(m_camera.rotation().y)),
-		0.0f,
-		-sin(glm::radians(m_camera.rotation().y)));
+	m_camera.position() -= m_speed * glm::cross(m_camera.direction(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveRight()
 {
-	m_camera.position() += m_speed * glm::vec3(
-		cos(glm::radians(m_camera.rotation().y)),
-		0.0f,
-		sin(glm::radians(m_camera.rotation().y)));
+	m_camera.position() += m_speed * glm::cross(m_camera.direction(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveForward()
 {
-	m_camera.position() += m_speed * glm::vec3(
-		(sin(glm::radians(m_camera.rotation().y))),
-		//0.0f,
-		(-sin(glm::radians(m_camera.rotation().x))), 
-		(-cos(glm::radians(m_camera.rotation().x)) * cos(glm::radians(m_camera.rotation().y))));
+	m_camera.position() += m_speed * m_camera.direction();
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveBackward()
 {
-	m_camera.position() -= m_speed * glm::vec3(
-		(sin(glm::radians(m_camera.rotation().y))),
-		//0.0f,
-		(-sin(glm::radians(m_camera.rotation().x))),
-		(-cos(glm::radians(m_camera.rotation().x)) * cos(glm::radians(m_camera.rotation().y))));
+	m_camera.position() -= m_speed * m_camera.direction();
 	m_speed = 0.1f;
 }
 
@@ -124,20 +110,30 @@ int GLHandler::initWindow()
 	}
 }
 
+// TODO: find a way to not have to use a global camera
 Camera *cameraForCallback;
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	cameraForCallback->rotation().y = xpos / 20.0;
-	cameraForCallback->rotation().x = ypos / 20.0;
-	if (cameraForCallback->rotation().y > 360.0)
-		cameraForCallback->rotation().y -= 360.0;
-	if (cameraForCallback->rotation().x > 360.0)
-		cameraForCallback->rotation().x -= 360.0;
-	if (cameraForCallback->rotation().y < 0.0)
-		cameraForCallback->rotation().y += 360.0;
-	if (cameraForCallback->rotation().x < 0.0)
-		cameraForCallback->rotation().x += 360.0;
+	const float pi = 3.14159;
+	static double x, y;
+	glm::vec3& d = cameraForCallback->direction();
+	glm::vec3& r = cameraForCallback->rotation();
+	r.y += (xpos - x) / 200.0;
+	x = xpos;
+	r.x += (ypos - y) / 200.0;
+	y = ypos;
+	if (r.y > 2 * pi)
+		r.y -= 2 * pi;
+	if (r.y < -2 * pi)
+		r.y += 2 * pi;
+	if (r.x > 1.5)
+		r.x = 1.5;
+	if (r.x < -1.5)
+		r.x = -1.5;
+	d.x = sin(r.y) * cos(r.x);
+	d.z = -cos(r.y) * cos(r.x);
+	d.y = -sin(r.x);
 }
 
 void GLHandler::initShaders()
@@ -179,22 +175,12 @@ void GLHandler::render()
 		// render
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		const float pi = 3.1415;
-
-		float rotx, roty, rotz;
-		rotx = atan(m_camera.position().y / m_camera.position().z) + pi * float(m_camera.position().z < 0);
-		roty = atan(m_camera.position().z / m_camera.position().x) + pi * float(m_camera.position().x < 0);
-		rotz = atan(m_camera.position().y / m_camera.position().x) + pi * float(m_camera.position().x < 0);
-
-
 
 		rippleShader.shaderProgram->use();
 		rippleShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
 		rippleShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
-		glm::mat4 view = glm::mat4(1.0f);
 		// note that we're translating the scene in the reverse direction of where we want to move
-		view = glm::rotate(view, glm::radians(m_camera.rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
-		view = glm::rotate(view, glm::radians(m_camera.rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), glm::vec3(0.0, 1.0, 0.0));
 
 		view = glm::translate(view, -m_camera.position());
 

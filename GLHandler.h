@@ -2,15 +2,17 @@
 
 #include <fstream>
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <string>
 #include <cstring>
-#include <GLFW/glfw3.h>
 #include <vector>
 #include <iostream>
 #include "../glm/glm.hpp"
 #include "../glm/gtc/matrix_transform.hpp"
 #include "../glm/gtc/type_ptr.hpp"
+#include <../glm/gtc/quaternion.hpp>
+#include <../glm/gtx/quaternion.hpp>
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "Object.h"
