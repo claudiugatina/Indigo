@@ -42,15 +42,15 @@ Object::Object(vector<float> rawFloats)
 	glBindVertexArray(0);
 }
 
-void Object::calcTransform()
+glm::mat4& Object::calcTransform()
 {
 	transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, position);
+	return transform;
 }
 
 void Object::draw()
 {
-	calcTransform();
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);

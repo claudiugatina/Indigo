@@ -17,7 +17,7 @@ int segmentsBig = 100;
 int segmentsSmall = 20;
 
 float R = 50.0f;
-float r = 4.0f;
+float r = 40.0f;
 
 const int s = 100;
 float mat[s][s];

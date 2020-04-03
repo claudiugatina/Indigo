@@ -44,6 +44,8 @@ class GLHandler
 	const unsigned int SCR_WIDTH = 800;
 	const unsigned int SCR_HEIGHT = 600;
 
+	glm::mat4 m_projectionMatrix;
+
 	void processInput(GLFWwindow * window);
 
 	void sprint();

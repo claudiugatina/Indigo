@@ -30,7 +30,7 @@ public:
 
 	Object(vector<float> rawFloats);
 
-	void calcTransform();
+	glm::mat4& calcTransform();
 	virtual void draw();
 };
 

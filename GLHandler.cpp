@@ -28,7 +28,7 @@ void GLHandler::processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 		sprint();
-
+	//m_camera.position() = 15.5f * glm::normalize(m_camera.position());
 }
 
 void GLHandler::sprint()
@@ -147,9 +147,8 @@ void GLHandler::initShaders()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	rippleShader.shaderProgram->use();
 
-	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
-	rippleShader.shaderProgram->setUniformMat4(string("projection"), projection);
+	m_projectionMatrix = glm::mat4(1.0f);
+	m_projectionMatrix = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	cameraForCallback = &m_camera;
@@ -161,8 +160,6 @@ void GLHandler::initShaders()
 	standardShader.shaderProgram = new ShaderProgram("standardShaderProgram.sp");
 
 	standardShader.shaderProgram->use();
-
-	standardShader.shaderProgram->setUniformMat4(string("projection"), projection);
 
 	glEnable(GL_DEPTH_TEST);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
@@ -182,6 +179,14 @@ void GLHandler::render()
 		// render
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		const float pi = 3.1415;
+
+		float rotx, roty, rotz;
+		rotx = atan(m_camera.position().y / m_camera.position().z) + pi * float(m_camera.position().z < 0);
+		roty = atan(m_camera.position().z / m_camera.position().x) + pi * float(m_camera.position().x < 0);
+		rotz = atan(m_camera.position().y / m_camera.position().x) + pi * float(m_camera.position().x < 0);
+
+
 
 		rippleShader.shaderProgram->use();
 		rippleShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
@@ -190,23 +195,24 @@ void GLHandler::render()
 		// note that we're translating the scene in the reverse direction of where we want to move
 		view = glm::rotate(view, glm::radians(m_camera.rotation().x), glm::vec3(1.0f, 0.0f, 0.0f));
 		view = glm::rotate(view, glm::radians(m_camera.rotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+
 		view = glm::translate(view, -m_camera.position());
-		rippleShader.shaderProgram->setUniformMat4(string("view"), view);
+
+		glm::mat4 VP = m_projectionMatrix * view;
 
 		for (auto& obj : rippleShader.objects)
 		{
-			rippleShader.shaderProgram->setUniformMat4("model", obj->transform);
+			rippleShader.shaderProgram->setUniformMat4("MVP", VP * obj->calcTransform());
 			obj->draw();
 		}
 
 		standardShader.shaderProgram->use();
 		standardShader.shaderProgram->setUniform3f(string("cameraPos"), m_camera.position());
 		standardShader.shaderProgram->setUniform1f(string("time"), glfwGetTime());
-		standardShader.shaderProgram->setUniformMat4(string("view"), view);
 
 		for (auto& obj : standardShader.objects)
 		{
-			standardShader.shaderProgram->setUniformMat4("model", obj->transform);
+			standardShader.shaderProgram->setUniformMat4("MVP", VP * obj->calcTransform());
 			obj->draw();
 		}
 
@@ -225,7 +231,7 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	// TODO: not hardcode this:
 	rippleShader.objects.push_back(new Object(initialObjects[0]));
 	standardShader.objects.push_back(new Object(initialObjects[1]));
-	rippleShader.objects.push_back(new Object(initialObjects[2]));
+	standardShader.objects.push_back(new Object(initialObjects[2]));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
 }
