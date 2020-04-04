@@ -10,11 +10,11 @@ Object::~Object()
 {
 }
 
-Object::Object(vector<float> rawFloats)
+void Object::init(vector<float> rawFloats)
 {
 	size = rawFloats.size() / floatsPerAttrib;
-	vertexAttribPointer = new VertexAttribute[size];
-	memcpy(vertexAttribPointer, &rawFloats[0], rawFloats.size() * sizeof(float));
+	m_vertexAttribPointer = new VertexAttribute[size];
+	memcpy(m_vertexAttribPointer, &rawFloats[0], rawFloats.size() * sizeof(float));
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -22,7 +22,7 @@ Object::Object(vector<float> rawFloats)
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), vertexAttribPointer, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), m_vertexAttribPointer, GL_STATIC_DRAW);
 
 	// declared only for pointer arithmetic below
 	VertexAttribute x;
@@ -59,9 +59,9 @@ void Object::pushSquare(vector<float>& res, glm::vec3 p1, glm::vec3 p2, glm::vec
 
 glm::mat4& Object::calcTransform()
 {
-	transform = glm::mat4(1.0f);
-	transform = glm::translate(transform, position);
-	return transform;
+	m_transform = glm::mat4(1.0f);
+	m_transform = glm::translate(m_transform, m_position);
+	return m_transform;
 }
 
 void Object::draw()

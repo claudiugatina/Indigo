@@ -28,7 +28,8 @@ void GLHandler::processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
 		sprint();
-	m_character->position = 15.5f * glm::normalize(m_character->position);
+	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
+	m_character->m_up = m_map->up(m_character->m_position);
 }
 
 void GLHandler::sprint()
@@ -38,14 +39,14 @@ void GLHandler::sprint()
 
 void GLHandler::moveLeft()
 {
-	m_character->position -= m_speed * glm::normalize(glm::cross(m_character->direction, m_character->position));
+	m_character->m_position -= m_speed * glm::normalize(glm::cross(m_character->m_direction, m_character->m_up));
 
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveRight()
 {
-	m_character->position += m_speed * glm::normalize(glm::cross(m_character->direction, m_character->position));
+	m_character->m_position += m_speed * glm::normalize(glm::cross(m_character->m_direction, m_character->m_up));
 
 	m_speed = 0.1f;
 }
@@ -53,13 +54,13 @@ void GLHandler::moveRight()
 void GLHandler::moveForward()
 {
 	// TODO: change direction also so that you don't have to keep moving the mouse down when moving forward
-	m_character->position += m_speed * m_character->direction;
+	m_character->m_position += m_speed * m_character->m_direction;
 	m_speed = 0.1f;
 }
 
 void GLHandler::moveBackward()
 {
-	m_character->position -= m_speed * m_character->direction;
+	m_character->m_position -= m_speed * m_character->m_direction;
 	m_speed = 0.1f;
 }
 
@@ -88,12 +89,23 @@ Object *character;
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	static double x, y;
-	glm::vec3& d = character->direction;
-	glm::vec3& p = character->position;
-	d = glm::normalize(d + float(xpos - x) / 2000.0f * glm::cross(d, p) - float(ypos - y) / 2000.0f * p);
+	// direction is assumed to always be normalized
+	glm::vec3& d = character->m_direction;
+	glm::vec3& u = character->m_up;
+	d = glm::normalize(d + float(xpos - x) / 2000.0f * glm::cross(d, u) - float(ypos - y) / 2000.0f * u);
 	x = xpos;
 	y = ypos;
 
+}
+
+float * distancing;
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	*distancing -= 0.1f * yoffset * abs(*distancing);
+	if (*distancing < minDistancing)
+		*distancing = minDistancing;
+	if (*distancing > maxDistancing)
+		*distancing = maxDistancing;
 }
 
 
@@ -127,10 +139,12 @@ int GLHandler::initWindow()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	m_projectionMatrix = glm::mat4(1.0f);
-	m_projectionMatrix = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 0.1f, 200.0f);
+	m_projectionMatrix = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 2.0f, 200.0f);
 
 	character = m_character;
-	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetCursorPosCallback(window, cursor_position_callback); 
+	distancing = &m_distancing;
+	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glEnable(GL_DEPTH_TEST);
@@ -156,9 +170,9 @@ void GLHandler::render()
 		// ------
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		m_camera.position() = m_character->position - 5.0f * m_character->direction;
-		m_camera.direction() = m_character->direction;
-		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_camera.position());
+		m_camera.position() = m_character->m_position - m_distancing * m_character->m_direction + 1.0f * m_character->m_up;
+		m_camera.direction() = m_character->m_direction;
+		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_map->up(m_character->m_position));
 
 		glm::mat4 VP = m_projectionMatrix * view;
 
@@ -180,12 +194,13 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	// TODO: not hardcode this:
 	//rippleShader.objects.push_back(new Object(initialObjects[0]));
 	//standardShader.objects.push_back(new Object(initialObjects[1]));
-	m_map = new Sphere(15.0f, 50, glm::vec3(1.0, 1.0, 1.0));
+	m_map = new Torus(30.0f, 70.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 100);
 	standardShader->objects.push_back(m_map);
 	m_character = new Sphere(0.5f, 150, glm::vec3(0.8f, 0.0f, 1.0f));
-	m_character->position = glm::vec3(0.0f, 15.5f, 0.0f);
+	m_character->m_position = glm::vec3(1.0f, 0.0f, 0.0f);
 	character = m_character;
 	standardShader->objects.push_back(m_character);
+//	standardShader->objects.push_back(new Torus(10.0f, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 10));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
 }

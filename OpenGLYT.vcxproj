@@ -134,6 +134,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="StandardShaderProgram.cpp" />
+    <ClCompile Include="Torus.cpp" />
     <ClCompile Include="VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="StandardShaderProgram.h" />
+    <ClInclude Include="Torus.h" />
     <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>

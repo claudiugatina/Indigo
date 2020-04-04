@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{36e9351e-7a5d-4750-98f1-1dfb0565b200}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders\StandardShader">
+      <UniqueIdentifier>{fdd17f64-237a-450c-95ba-088fbd48bbfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders\WavesShader">
+      <UniqueIdentifier>{bc15e2f3-570a-4f22-8a0b-662848b01171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Objects">
+      <UniqueIdentifier>{cb68fda2-5bf2-42ea-827d-bea77fe3cba2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -42,26 +54,29 @@
     <ClCompile Include="Rotation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexAttribute.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Sphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StandardShaderProgram.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="RippleShaderProgram.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderProgram.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardShaderProgram.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexAttribute.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Torus.cpp">
+      <Filter>Source Files\Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -107,13 +122,16 @@
     <ClInclude Include="RippleShaderProgram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Torus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="wavesFragmentShader.fs">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders\WavesShader</Filter>
     </Text>
     <Text Include="wavesVertexShader.vs">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders\WavesShader</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -122,20 +140,20 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="wavesShaderProgram.sp">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="wavesGeometryShader.gs">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="standardFragmentShader.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="standardShaderProgram.sp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders\StandardShader</Filter>
     </None>
     <None Include="standardVertexShader.vs">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Shaders\StandardShader</Filter>
+    </None>
+    <None Include="standardShaderProgram.sp">
+      <Filter>Source Files\Shaders\StandardShader</Filter>
+    </None>
+    <None Include="wavesGeometryShader.gs">
+      <Filter>Source Files\Shaders\WavesShader</Filter>
+    </None>
+    <None Include="wavesShaderProgram.sp">
+      <Filter>Source Files\Shaders\WavesShader</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -20,13 +20,17 @@
 #include "ShaderProgram.h"
 #include "StandardShaderProgram.h"
 #include "RippleShaderProgram.h"
+#include "Torus.h"
 
 using namespace std;
 
 const unsigned int MAX_SHADER_SIZE = 5000;
+const float minDistancing = 2.0f;
+const float maxDistancing = 70.0f;
 
 class GLHandler
 {
+	float m_distancing = 5.0f;
 	Camera m_camera;
 	Object * m_map;
 	Object * m_character;
