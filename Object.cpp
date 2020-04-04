@@ -42,6 +42,21 @@ Object::Object(vector<float> rawFloats)
 	glBindVertexArray(0);
 }
 
+void Object::pushSquare(vector<float>& res, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, glm::vec3 norm123, glm::vec3 norm234, glm::vec3 rgb)
+{
+	vector<float> toPush = {
+		p1.x, p1.y, p1.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
+		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
+		p3.x, p3.y, p3.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
+
+		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
+		p3.x, p3.y, p3.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
+		p4.x, p4.y, p4.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
+	};
+
+	res.insert(res.end(), toPush.begin(), toPush.end());
+}
+
 glm::mat4& Object::calcTransform()
 {
 	transform = glm::mat4(1.0f);

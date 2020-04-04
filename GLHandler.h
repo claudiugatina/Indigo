@@ -16,6 +16,7 @@
 #include "Camera.h"
 #include "ShaderProgram.h"
 #include "Object.h"
+#include "Sphere.h"
 #include "ShaderProgram.h"
 #include "StandardShaderProgram.h"
 #include "RippleShaderProgram.h"
@@ -27,7 +28,8 @@ const unsigned int MAX_SHADER_SIZE = 5000;
 class GLHandler
 {
 	Camera m_camera;
-	Object m_character;
+	Object * m_map;
+	Object * m_character;
 	float m_speed;
 
 	GLFWwindow* window;

@@ -33,5 +33,8 @@ public:
 
 	glm::mat4& calcTransform();
 	virtual void draw();
+
+protected:
+	virtual void pushSquare(vector<float>& res, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, glm::vec3 norm123, glm::vec3 norm234, glm::vec3 rgb);
 };
 
