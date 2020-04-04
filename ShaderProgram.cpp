@@ -48,7 +48,16 @@ void ShaderProgram::linkShaders()
 	}
 }
 
-void ShaderProgram::setUniformMat4(string variableName, glm::mat4 & value)
+void ShaderProgram::setUniformVec3(string variableName, const glm::vec3 & value)
+{
+	// variableLocation will be set to -1 if the variable name isn't found in the program
+	// we don't treat this case for efficiency
+	GLuint variableLocation = glGetUniformLocation(shaderProgramIdentifier, variableName.data());
+	glUniform3f(variableLocation, value.x, value.y, value.z);
+}
+
+
+void ShaderProgram::setUniformMat4(string variableName, const glm::mat4 & value)
 {
 	// variableLocation will be set to -1 if the variable name isn't found in the program
 	// we don't treat this case for efficiency
@@ -64,7 +73,7 @@ void ShaderProgram::setUniform1f(string variableName, float value)
 	glUniform1f(variableLocation, value);
 }
 
-void ShaderProgram::setUniform3f(string variableName, glm::vec3 value)
+void ShaderProgram::setUniform3f(string variableName, const glm::vec3& value)
 {
 	// variableLocation will be set to -1 if the variable name isn't found in the program
 	// we don't treat this case for efficiency

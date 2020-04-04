@@ -11,7 +11,7 @@ StandardShaderProgram::~StandardShaderProgram()
 {
 }
 
-void StandardShaderProgram::use(glm::vec3 & cameraPos, glm::mat4 & VP)
+void StandardShaderProgram::use(const glm::vec3 & cameraPos, const glm::mat4 & VP)
 {
 	ShaderProgram::use();
 	setUniform3f(string("cameraPos"), cameraPos);

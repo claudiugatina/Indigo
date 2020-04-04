@@ -9,6 +9,6 @@ public:
 	vector<Object*> objects;
 	RippleShaderProgram();
 	virtual ~RippleShaderProgram();
-	void use(glm::vec3 & cameraPos, float time, glm::mat4 & VP);
+	void use(const glm::vec3 & cameraPos, float time, const glm::mat4 & VP);
 };
 

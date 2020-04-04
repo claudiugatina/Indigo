@@ -22,8 +22,8 @@ vector<float> Sphere::generateSphere()
 		for (int j = 0; j < m_resolution; ++j)
 		{
 			glm::vec3 p1 = spherePoint(i, j), p2 = spherePoint(i, j + 1), p3 = spherePoint(i + 1, j), p4 = spherePoint(i + 1, j + 1);
-			glm::vec3 norm123 = glm::triangleNormal(p1, p2, p3);
-			glm::vec3 norm234 = glm::triangleNormal(p2, p3, p4);
+			glm::vec3 norm123 = glm::normalize(glm::triangleNormal(p1, p2, p3));
+			glm::vec3 norm234 = glm::normalize(glm::triangleNormal(p2, p3, p4));
 
 			pushSquare(res, p1, p2, p3, p4, norm123, norm234, m_color);
 

@@ -10,6 +10,6 @@ public:
 	StandardShaderProgram();
 	virtual ~StandardShaderProgram();
 	// VP stands for view and projection
-	void use(glm::vec3 & cameraPos, glm::mat4 & VP);
+	void use(const glm::vec3 & cameraPos, const glm::mat4 & VP);
 };
 

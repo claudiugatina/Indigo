@@ -1,7 +1,7 @@
 #version 330 core
 
-in float viewAngleToFrag;
 out vec4 FragColor;
+in float viewAngleToFrag;
 in vec3 colorGeomToFrag;
 
 // TODO: repair colours changing with the direction of the camera

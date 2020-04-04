@@ -12,7 +12,7 @@ out float viewAngle;
 void main()
 {
 	vec3 vertexToCamera = cameraPos - aPos;
-	viewAngle = abs(dot(normalize(vertexToCamera), normalize(normal)));
+	viewAngle = abs(dot(normalize(vertexToCamera), normal));
 	colorOut = colorIn; // * viewCos;
     gl_Position = MVP * vec4(aPos, 1.0);
 }

@@ -194,12 +194,13 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	// TODO: not hardcode this:
 	//rippleShader.objects.push_back(new Object(initialObjects[0]));
 	//standardShader.objects.push_back(new Object(initialObjects[1]));
-	m_map = new Torus(30.0f, 70.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 100);
-	standardShader->objects.push_back(m_map);
-	m_character = new Sphere(0.5f, 150, glm::vec3(0.8f, 0.0f, 1.0f));
+	m_map = new Torus(30.0f, 70.0f, glm::vec3(1.0f, 0.0f, 1.0f), 50, 100);
+	m_character = new Sphere(0.5f, 150, glm::vec3(0.5f, 0.0f, 0.5f));
 	m_character->m_position = glm::vec3(1.0f, 0.0f, 0.0f);
 	character = m_character;
-	standardShader->objects.push_back(m_character);
+	rippleShader->objects.push_back(m_map);
+	rippleShader->objects.push_back(m_character);
+	rippleShader->objects.push_back(new Sphere(20.0f, 150, glm::vec3(1.0f, 0.0f, 1.0f)));
 //	standardShader->objects.push_back(new Torus(10.0f, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 10));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
