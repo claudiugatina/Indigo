@@ -63,15 +63,20 @@ void GLHandler::moveBackward()
 	m_character->m_position -= m_speed * m_character->m_direction;
 	m_speed = 0.1f;
 }
-
+Object* the_sphere;
 void GLHandler::translateDeep()
 {
-	m_camera.rotation().x -= 0.1;
+	m_map = the_sphere;
+	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
+	m_character->m_up = m_map->up(m_character->m_position);
 }
 
+Object* the_torus;
 void GLHandler::translateClose()
 {
-	m_camera.rotation().x += 0.1;
+	m_map = the_torus;
+	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
+	m_character->m_up = m_map->up(m_character->m_position);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -195,12 +200,13 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	//rippleShader.objects.push_back(new Object(initialObjects[0]));
 	//standardShader.objects.push_back(new Object(initialObjects[1]));
 	m_map = new Torus(30.0f, 70.0f, glm::vec3(1.0f, 0.0f, 1.0f), 50, 100);
+	the_torus = m_map;
 	m_character = new Sphere(0.5f, 150, glm::vec3(0.5f, 0.0f, 0.5f));
 	m_character->m_position = glm::vec3(1.0f, 0.0f, 0.0f);
 	character = m_character;
-	rippleShader->objects.push_back(m_map);
-	rippleShader->objects.push_back(m_character);
-	rippleShader->objects.push_back(new Sphere(20.0f, 150, glm::vec3(1.0f, 0.0f, 1.0f)));
+	standardShader->objects.push_back(m_map);
+	standardShader->objects.push_back(m_character);
+	standardShader->objects.push_back(the_sphere = new Sphere(20.0f, 150, glm::vec3(1.0f, 0.0f, 1.0f)));
 //	standardShader->objects.push_back(new Torus(10.0f, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 10));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));

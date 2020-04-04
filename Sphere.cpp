@@ -39,7 +39,7 @@ glm::vec3 Sphere::project(glm::vec3 position, float height)
 
 glm::vec3 Sphere::up(glm::vec3 position)
 {
-	return position - m_position;
+	return glm::normalize(position - m_position);
 }
 
 Sphere::Sphere(float radius, int resolution, glm::vec3 color) : m_radius(radius), m_resolution(resolution), m_color(color)
