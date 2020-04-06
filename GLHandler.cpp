@@ -8,6 +8,9 @@ void GLHandler::processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+		sprint();
+
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 		moveLeft();
 
@@ -21,14 +24,13 @@ void GLHandler::processInput(GLFWwindow *window)
 		moveBackward();
 
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-		translateDeep();
+		goToSphere();
 
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-		translateClose();
+		goToTorus();
 
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
-		sprint();
-	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
+	m_speed = 0.1f;
+	m_character->m_position = m_map->project(m_character->m_position, 0.5f);
 	m_character->m_up = m_map->up(m_character->m_position);
 }
 
@@ -41,30 +43,26 @@ void GLHandler::moveLeft()
 {
 	m_character->m_position -= m_speed * glm::normalize(glm::cross(m_character->m_direction, m_character->m_up));
 
-	m_speed = 0.1f;
 }
 
 void GLHandler::moveRight()
 {
 	m_character->m_position += m_speed * glm::normalize(glm::cross(m_character->m_direction, m_character->m_up));
 
-	m_speed = 0.1f;
 }
 
 void GLHandler::moveForward()
 {
 	// TODO: change direction also so that you don't have to keep moving the mouse down when moving forward
 	m_character->m_position += m_speed * m_character->m_direction;
-	m_speed = 0.1f;
 }
 
 void GLHandler::moveBackward()
 {
 	m_character->m_position -= m_speed * m_character->m_direction;
-	m_speed = 0.1f;
 }
 Object* the_sphere;
-void GLHandler::translateDeep()
+void GLHandler::goToSphere()
 {
 	m_map = the_sphere;
 	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
@@ -72,7 +70,7 @@ void GLHandler::translateDeep()
 }
 
 Object* the_torus;
-void GLHandler::translateClose()
+void GLHandler::goToTorus()
 {
 	m_map = the_torus;
 	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
@@ -210,6 +208,15 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 //	standardShader->objects.push_back(new Torus(10.0f, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 10));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
+	for (int i = 0; i < 100; ++i)
+	{
+		float radius = 1.0f + (rand() % 100) / 20.0f;
+		int resolution = 5;
+		glm::vec3 rgb = glm::vec3(0.2f + (rand() % 10) / 40.0f, 0.2f + (rand() % 10) / 20.0f, 0.8f + (rand() % 10) / 40.0f);
+		Sphere * star = new Sphere(radius, resolution, rgb);
+		star->m_position = glm::vec3(rand() % 200 - 100, rand() % 200 - 100, rand() % 200 - 100);
+		standardShader->objects.push_back(star);
+	}
 }
 
 void GLHandler::init(vector<vector<float> >& initialObjects)

@@ -59,9 +59,9 @@ class GLHandler
 
 	void moveBackward();
 
-	void translateDeep();
+	void goToSphere();
 
-	void translateClose();
+	void goToTorus();
 
 	static void framebuffer_size_callback(GLFWwindow * window, int width, int height);
 
