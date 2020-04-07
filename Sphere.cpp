@@ -3,7 +3,7 @@
 glm::vec3 Sphere::spherePoint(int i, int j)
 {
 	float angley = twoPi / float(m_resolution) * float(j);
-	float anglex = twoPi / float(m_resolution) * float(i);
+	float anglex = pi / float(m_resolution) * float(i);
 
 	glm::vec3 res;
 
@@ -48,8 +48,8 @@ Sphere::Sphere(float radius, int resolution, glm::vec3 color) : m_radius(radius)
 
 	// indices for triangles
 	// top and bottom
-	unsigned int last = m_indices.size() - 1;
-	for (int i = 1; i <= m_resolution; ++i)
+	unsigned int last = m_vertexAttributes.size() - 1;
+	for (int i = 1; i < m_resolution; ++i)
 	{
 		m_indices.push_back(0);
 		m_indices.push_back(i);
@@ -60,11 +60,18 @@ Sphere::Sphere(float radius, int resolution, glm::vec3 color) : m_radius(radius)
 		m_indices.push_back(last - i);
 		m_indices.push_back(last - i - 1);
 	}
+	m_indices.push_back(0);
+	m_indices.push_back(1);
+	m_indices.push_back(m_resolution);
+
+	m_indices.push_back(last);
+	m_indices.push_back(last - 1);
+	m_indices.push_back(last - m_resolution);
 
 	// rest of the sphere
-	for (int i = 1; i < m_resolution; ++i)
+	for (int i = 0; i < m_resolution - 2; ++i)
 	{
-		for (int j = 0; j <= m_resolution - 1; ++j)
+		for (int j = 0; j < m_resolution - 1; ++j)
 		{
 			unsigned int lu = i * m_resolution + j + 1;
 			unsigned int ld = (i + 1) * m_resolution + j + 1;
@@ -79,6 +86,18 @@ Sphere::Sphere(float radius, int resolution, glm::vec3 color) : m_radius(radius)
 			m_indices.push_back(ru);
 			m_indices.push_back(rd); 
 		}
+		unsigned int lu = (i + 1) * m_resolution;
+		unsigned int ld = (i + 2) * m_resolution;
+		unsigned int ru = i * m_resolution + 1;
+		unsigned int rd = (i + 1) * m_resolution + 1;
+
+		m_indices.push_back(lu);
+		m_indices.push_back(ld);
+		m_indices.push_back(ru);
+
+		m_indices.push_back(ld);
+		m_indices.push_back(ru);
+		m_indices.push_back(rd);
 	}
 	init();
 }
