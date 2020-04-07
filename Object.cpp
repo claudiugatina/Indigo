@@ -51,10 +51,5 @@ glm::mat4& Object::calcTransform()
 void Object::draw()
 {
 	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// apparently the next line is not needed. This should speed things up for static objects
-	//glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), vertexAttribPointer, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0);
 }
