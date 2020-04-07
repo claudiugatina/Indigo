@@ -9,51 +9,36 @@ Object::~Object()
 {
 }
 
-void Object::init(vector<float> rawFloats)
+void Object::init()
 {
-	size = rawFloats.size() / floatsPerAttrib;
-	m_vertexAttribPointer = new VertexAttribute[size];
-	memcpy(m_vertexAttribPointer, &rawFloats[0], rawFloats.size() * sizeof(float));
-
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
 	glBindVertexArray(VAO);
 
+	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), m_vertexAttribPointer, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, m_vertexAttributes.size() * sizeof(VertexAttribute), &m_vertexAttributes[0], GL_STATIC_DRAW);
 
 	// declared only for pointer arithmetic below
 	VertexAttribute x;
 	// position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.x - (int)&x));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.m_pos - (int)&x));
 	glEnableVertexAttribArray(0);
 
 	// color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.r - (int)&x));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.m_color - (int)&x));
 	glEnableVertexAttribArray(1);
 
 	// normal
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, sizeof(VertexAttribute), (void*)((int)&x.nx - (int)&x));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, sizeof(VertexAttribute), (void*)((int)&x.m_normal - (int)&x));
 	glEnableVertexAttribArray(2);
+
+	// indices
+	glGenBuffers(1, &elementBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), &m_indices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}
-
-void Object::pushSquare(vector<float>& res, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3, glm::vec3 p4, glm::vec3 norm123, glm::vec3 norm234, glm::vec3 rgb)
-{
-	vector<float> toPush = {
-		p1.x, p1.y, p1.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
-		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
-		p3.x, p3.y, p3.z, rgb.x, rgb.y, rgb.z, norm123.x, norm123.y, norm123.z,
-
-		p2.x, p2.y, p2.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
-		p3.x, p3.y, p3.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
-		p4.x, p4.y, p4.z, rgb.x, rgb.y, rgb.z, norm234.x, norm234.y, norm234.z,
-	};
-
-	res.insert(res.end(), toPush.begin(), toPush.end());
 }
 
 glm::mat4& Object::calcTransform()
@@ -70,5 +55,6 @@ void Object::draw()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	// apparently the next line is not needed. This should speed things up for static objects
 	//glBufferData(GL_ARRAY_BUFFER, size * sizeof(VertexAttribute), vertexAttribPointer, GL_STATIC_DRAW);
-	glDrawArrays(GL_TRIANGLES, 0, size);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0);
 }

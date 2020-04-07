@@ -13,5 +13,6 @@ protected:
 	bool visible;
 	GLuint VAO;
 	GLuint VBO;
+	GLuint elementBuffer;
 };
 

@@ -2,8 +2,8 @@
 
 glm::vec3 Sphere::spherePoint(int i, int j)
 {
-	float anglex = twoPi / float(m_resolution) * float(j);
-	float angley = twoPi / float(m_resolution) * float(i);
+	float angley = twoPi / float(m_resolution) * float(j);
+	float anglex = twoPi / float(m_resolution) * float(i);
 
 	glm::vec3 res;
 
@@ -11,24 +11,6 @@ glm::vec3 Sphere::spherePoint(int i, int j)
 	res.y = m_radius * cos(anglex);
 	res.z = m_radius * sin(anglex) * cos(angley);
 
-	return res;
-}
-
-vector<float> Sphere::generateSphere()
-{
-	vector<float> res;
-	for (int i = 0; i < m_resolution; ++i)
-	{
-		for (int j = 0; j < m_resolution; ++j)
-		{
-			glm::vec3 p1 = spherePoint(i, j), p2 = spherePoint(i, j + 1), p3 = spherePoint(i + 1, j), p4 = spherePoint(i + 1, j + 1);
-			glm::vec3 norm123 = glm::normalize(glm::triangleNormal(p1, p2, p3));
-			glm::vec3 norm234 = glm::normalize(glm::triangleNormal(p2, p3, p4));
-
-			pushSquare(res, p1, p2, p3, p4, norm123, norm234, m_color);
-
-		}
-	}
 	return res;
 }
 
@@ -46,7 +28,59 @@ Sphere::Sphere(float radius, int resolution, glm::vec3 color) : m_radius(radius)
 {
 	m_direction = glm::vec3(0.0f, 0.0f, 1.0f);
 	m_position = glm::vec3(0.0f);
-	init(generateSphere());
+
+	VertexAttribute top(glm::vec3(0.0f, m_radius, 0.0f), glm::vec3(m_color), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	m_vertexAttributes.push_back(top);
+
+	for (int i = 1; i < m_resolution - 1; ++i)
+	{
+		for (int j = 0; j < m_resolution; ++j)
+		{
+			glm::vec3 pos = spherePoint(i, j);
+			m_vertexAttributes.push_back(VertexAttribute(pos, m_color, glm::normalize(pos)));
+		}
+	}
+
+	VertexAttribute bottom(glm::vec3(0.0f, -m_radius, 0.0f), m_color, glm::vec3(0.0f, -1.0f, 0.0f));
+
+	m_vertexAttributes.push_back(bottom);
+
+	// indices for triangles
+	// top and bottom
+	unsigned int last = m_indices.size() - 1;
+	for (int i = 1; i <= m_resolution; ++i)
+	{
+		m_indices.push_back(0);
+		m_indices.push_back(i);
+		m_indices.push_back(i + 1);
+
+
+		m_indices.push_back(last);
+		m_indices.push_back(last - i);
+		m_indices.push_back(last - i - 1);
+	}
+
+	// rest of the sphere
+	for (int i = 1; i < m_resolution; ++i)
+	{
+		for (int j = 0; j <= m_resolution - 1; ++j)
+		{
+			unsigned int lu = i * m_resolution + j + 1;
+			unsigned int ld = (i + 1) * m_resolution + j + 1;
+			unsigned int ru = i * m_resolution + j + 1 + 1;
+			unsigned int rd = (i + 1) * m_resolution + j + 1 + 1;
+
+			m_indices.push_back(lu);
+			m_indices.push_back(ld);
+			m_indices.push_back(ru); 
+			
+			m_indices.push_back(ld);
+			m_indices.push_back(ru);
+			m_indices.push_back(rd); 
+		}
+	}
+	init();
 }
 
 Sphere::~Sphere()

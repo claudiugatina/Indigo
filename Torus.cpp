@@ -55,10 +55,10 @@ Torus::Torus(float r, float R, glm::vec3 color, int resolutionBig, int resolutio
 			glm::vec3 norm123 = glm::triangleNormal(p1, p2, p3);
 			glm::vec3 norm234 = glm::triangleNormal(p2, p3, p4);
 
-			pushSquare(torrus, p1, p2, p3, p4, norm123, norm234, color);
+//			pushSquare(torrus, p1, p2, p3, p4, norm123, norm234, color);
 		}
 	}
-	init(torrus);
+//	init(torrus);
 }
 
 

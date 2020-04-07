@@ -139,7 +139,7 @@ int GLHandler::initWindow()
 		return -1;
 	}
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.7f, 1.0f);
 
 	m_projectionMatrix = glm::mat4(1.0f);
 	m_projectionMatrix = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 2.0f, 200.0f);
@@ -175,7 +175,7 @@ void GLHandler::render()
 
 		m_camera.position() = m_character->m_position - m_distancing * m_character->m_direction + 1.0f * m_character->m_up;
 		m_camera.direction() = m_character->m_direction;
-		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_map->up(m_character->m_position));
+		glm::mat4 view = glm::lookAt(m_camera.position(), m_camera.position() + m_camera.direction(), m_character->m_up);
 
 		glm::mat4 VP = m_projectionMatrix * view;
 
@@ -197,26 +197,18 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	// TODO: not hardcode this:
 	//rippleShader.objects.push_back(new Object(initialObjects[0]));
 	//standardShader.objects.push_back(new Object(initialObjects[1]));
-	m_map = new Torus(30.0f, 70.0f, glm::vec3(1.0f, 0.0f, 1.0f), 50, 100);
-	the_torus = m_map;
+	m_map = new Sphere(20.0f, 20, glm::vec3(1.0f, 0.0f, 1.0f));
+	//the_torus = m_map;
 	m_character = new Sphere(0.5f, 150, glm::vec3(0.5f, 0.0f, 0.5f));
 	m_character->m_position = glm::vec3(1.0f, 0.0f, 0.0f);
 	character = m_character;
 	standardShader->objects.push_back(m_map);
 	standardShader->objects.push_back(m_character);
-	standardShader->objects.push_back(the_sphere = new Sphere(20.0f, 150, glm::vec3(1.0f, 0.0f, 1.0f)));
+	//standardShader->objects.push_back(the_sphere = new Torus(20.0f, 0.0f, glm::vec3(1.0f, 0.0f, 1.0f), 100, 100));
 //	standardShader->objects.push_back(new Torus(10.0f, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 10));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
-	for (int i = 0; i < 100; ++i)
-	{
-		float radius = 1.0f + (rand() % 100) / 20.0f;
-		int resolution = 5;
-		glm::vec3 rgb = glm::vec3(0.2f + (rand() % 10) / 40.0f, 0.2f + (rand() % 10) / 20.0f, 0.8f + (rand() % 10) / 40.0f);
-		Sphere * star = new Sphere(radius, resolution, rgb);
-		star->m_position = glm::vec3(rand() % 200 - 100, rand() % 200 - 100, rand() % 200 - 100);
-		standardShader->objects.push_back(star);
-	}
+	
 }
 
 void GLHandler::init(vector<vector<float> >& initialObjects)

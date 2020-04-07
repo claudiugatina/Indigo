@@ -25,6 +25,9 @@
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{cb68fda2-5bf2-42ea-827d-bea77fe3cba2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shaders\TorusShader">
+      <UniqueIdentifier>{1c7f3a59-4591-49e6-bd32-aae5eccbcfd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -154,6 +157,18 @@
     </None>
     <None Include="wavesShaderProgram.sp">
       <Filter>Source Files\Shaders\WavesShader</Filter>
+    </None>
+    <None Include="torusFragmentShader.fs">
+      <Filter>Source Files\Shaders\TorusShader</Filter>
+    </None>
+    <None Include="torusShaderProgram.sp">
+      <Filter>Source Files\Shaders\TorusShader</Filter>
+    </None>
+    <None Include="torusVertexShader.vs">
+      <Filter>Source Files\Shaders\TorusShader</Filter>
+    </None>
+    <None Include="torusGeometryShader.gs">
+      <Filter>Source Files\Shaders\TorusShader</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -163,6 +163,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="standardFragmentShader.fs" />
+    <None Include="torusFragmentShader.fs" />
+    <None Include="torusGeometryShader.gs" />
+    <None Include="torusShaderProgram.sp" />
+    <None Include="torusVertexShader.vs" />
     <None Include="wavesGeometryShader.gs" />
     <None Include="standardShaderProgram.sp" />
     <None Include="wavesShaderProgram.sp" />
