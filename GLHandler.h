@@ -20,6 +20,8 @@
 #include "ShaderProgram.h"
 #include "StandardShaderProgram.h"
 #include "RippleShaderProgram.h"
+#include "TorusShaderProgram.h"
+#include "FluidTorus.h"
 #include "Torus.h"
 
 using namespace std;
@@ -32,7 +34,7 @@ class GLHandler
 {
 	float m_distancing = 5.0f;
 	Camera m_camera;
-	Object * m_map;
+	FluidObject * m_map;
 	Object * m_character;
 	float m_speed;
 
@@ -40,7 +42,8 @@ class GLHandler
 
 	StandardShaderProgram * standardShader;
 	RippleShaderProgram * rippleShader;
-
+	TorusShaderProgram * torusShader;
+	
 	// settings
 	const unsigned int SCR_WIDTH = 1200;
 	const unsigned int SCR_HEIGHT = 1000;
@@ -59,9 +62,9 @@ class GLHandler
 
 	void moveBackward();
 
-	void goToSphere();
+	void diminishTorus();
 
-	void goToTorus();
+	void augmentTorus();
 
 	static void framebuffer_size_callback(GLFWwindow * window, int width, int height);
 

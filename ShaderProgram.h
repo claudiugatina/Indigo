@@ -17,6 +17,7 @@ private:
 
 protected:
 	void setUniformVec3(string variableName, const glm::vec3 & value);
+	void setUniformVec2(string variableName, const glm::vec2 & value);
 	void setUniformMat4(string variableName, const glm::mat4 & value);
 	void setUniform1f(string variableName, float value);
 	void setUniform3f(string variableName, const glm::vec3& value);

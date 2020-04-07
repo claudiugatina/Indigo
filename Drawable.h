@@ -10,9 +10,10 @@ public:
 	Drawable();
 	~Drawable();
 protected:
-	bool visible;
+	bool visible = true;
 	GLuint VAO;
 	GLuint VBO;
-	GLuint elementBuffer;
+	// element buffer
+	GLuint EB;
 };
 

@@ -29,12 +29,12 @@ void Object::init()
 	glEnableVertexAttribArray(1);
 
 	// normal
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE, sizeof(VertexAttribute), (void*)((int)&x.m_normal - (int)&x));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(VertexAttribute), (void*)((int)&x.m_normal - (int)&x));
 	glEnableVertexAttribArray(2);
 
 	// indices
-	glGenBuffers(1, &elementBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glGenBuffers(1, &EB);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EB);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), &m_indices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -50,6 +50,8 @@ glm::mat4& Object::calcTransform()
 
 void Object::draw()
 {
+	if (!visible)
+		return;
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, (void*)0);
 }

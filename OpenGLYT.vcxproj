@@ -123,6 +123,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Direction.cpp" />
     <ClCompile Include="Drawable.cpp" />
+    <ClCompile Include="FluidObject.cpp" />
+    <ClCompile Include="FluidTorus.cpp" />
+    <ClCompile Include="FluidVertexAttribute.cpp" />
     <ClCompile Include="GLHandler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -135,12 +138,16 @@
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="StandardShaderProgram.cpp" />
     <ClCompile Include="Torus.cpp" />
+    <ClCompile Include="TorusShaderProgram.cpp" />
     <ClCompile Include="VertexAttribute.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="FluidObject.h" />
+    <ClInclude Include="FluidTorus.h" />
+    <ClInclude Include="FluidVertexAttribute.h" />
     <ClInclude Include="GLHandler.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="RippleShaderProgram.h" />
@@ -152,6 +159,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="StandardShaderProgram.h" />
     <ClInclude Include="Torus.h" />
+    <ClInclude Include="TorusShaderProgram.h" />
     <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>

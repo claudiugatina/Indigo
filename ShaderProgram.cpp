@@ -56,6 +56,13 @@ void ShaderProgram::setUniformVec3(string variableName, const glm::vec3 & value)
 	glUniform3f(variableLocation, value.x, value.y, value.z);
 }
 
+void ShaderProgram::setUniformVec2(string variableName, const glm::vec2 & value)
+{
+	// variableLocation will be set to -1 if the variable name isn't found in the program
+	// we don't treat this case for efficiency
+	GLuint variableLocation = glGetUniformLocation(shaderProgramIdentifier, variableName.data());
+	glUniform2f(variableLocation, value.x, value.y);
+}
 
 void ShaderProgram::setUniformMat4(string variableName, const glm::mat4 & value)
 {

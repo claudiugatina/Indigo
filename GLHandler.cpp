@@ -24,10 +24,10 @@ void GLHandler::processInput(GLFWwindow *window)
 		moveBackward();
 
 	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
-		goToSphere();
+		diminishTorus();
 
 	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-		goToTorus();
+		augmentTorus();
 
 	m_speed = 0.1f;
 	m_character->m_position = m_map->project(m_character->m_position, 0.5f);
@@ -61,20 +61,18 @@ void GLHandler::moveBackward()
 {
 	m_character->m_position -= m_speed * m_character->m_direction;
 }
-Object* the_sphere;
-void GLHandler::goToSphere()
+
+FluidTorus* the_torus;
+void GLHandler::diminishTorus()
 {
-	m_map = the_sphere;
-	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
-	m_character->m_up = m_map->up(m_character->m_position);
+	the_torus->m_R += 0.5f;
+	the_torus->m_r += 0.5f;
 }
 
-Object* the_torus;
-void GLHandler::goToTorus()
+void GLHandler::augmentTorus()
 {
-	m_map = the_torus;
-	m_character->m_position = m_map->project(m_character->m_position, 1.0f);
-	m_character->m_up = m_map->up(m_character->m_position);
+	the_torus->m_R -= 0.5f;
+	the_torus->m_r -= 0.5f;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -139,7 +137,7 @@ int GLHandler::initWindow()
 		return -1;
 	}
 
-	glClearColor(0.0f, 0.0f, 0.7f, 1.0f);
+	glClearColor(0.3f, 0.2f, 0.3f, 1.0f);
 
 	m_projectionMatrix = glm::mat4(1.0f);
 	m_projectionMatrix = glm::perspective(glm::radians(50.0f), 800.0f / 600.0f, 2.0f, 200.0f);
@@ -157,6 +155,7 @@ void GLHandler::initShaders()
 {
 	standardShader = new StandardShaderProgram();
 	rippleShader = new RippleShaderProgram();
+	torusShader = new TorusShaderProgram();
 }
 
 extern float gety(float, float);
@@ -181,6 +180,7 @@ void GLHandler::render()
 
 		rippleShader->use(m_camera.position(), glfwGetTime(), VP);
 		standardShader->use(m_camera.position(), VP);
+		torusShader->use(m_camera.position(), VP);
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -197,14 +197,13 @@ void GLHandler::initObjects(vector<vector<float> >& initialObjects)
 	// TODO: not hardcode this:
 	//rippleShader.objects.push_back(new Object(initialObjects[0]));
 	//standardShader.objects.push_back(new Object(initialObjects[1]));
-	m_map = new Sphere(20.0f, 20, glm::vec3(1.0f, 0.0f, 1.0f));
+	m_map = the_torus = new FluidTorus(20.0f, 50.0f, glm::vec3(1.0f, 0.0f, 1.0f), 100, 100);
 	//the_torus = m_map;
 	m_character = new Sphere(0.5f, 150, glm::vec3(0.5f, 0.0f, 0.5f));
 	m_character->m_position = glm::vec3(1.0f, 0.0f, 0.0f);
 	character = m_character;
-	standardShader->objects.push_back(m_map);
 	standardShader->objects.push_back(m_character);
-	//standardShader->objects.push_back(the_sphere = new Torus(20.0f, 0.0f, glm::vec3(1.0f, 0.0f, 1.0f), 100, 100));
+	torusShader->objects.push_back(the_torus);
 //	standardShader->objects.push_back(new Torus(10.0f, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f), 50, 10));
 //	for (auto & rawVector : initialObjects)
 //		objects.push_back(Object(rawVector));
